@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module mac_int_fsm (
     input  logic         clk,
     input  logic         reset,
@@ -28,9 +30,18 @@ module mac_int_fsm (
     always_comb begin
         next_state = state;  // Default
         case (state)
-            IDLE:        if (valid) next_state = PROCESSING;
-            PROCESSING:  next_state = DONE;
-            DONE:        next_state = IDLE;
+            IDLE:        if (valid) begin 
+                next_state = PROCESSING;
+                done=0;
+            end
+            PROCESSING:  begin
+                next_state = DONE;
+                done=0;
+            end
+            DONE: begin 
+                next_state = IDLE;
+                done=1;
+            end
         endcase
     end
 
@@ -46,22 +57,23 @@ module mac_int_fsm (
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
             y    <= 32'b0;
-            done <= 1'b0;
+            // done <= 1'b0;
         end
         else begin
-            done <= 1'b0; // default
+            // done <= 1'b0; // default
 
             case (state)
             	IDLE:begin 
             	   y<=y;
-            	   done<=done;
+            	   //done<=done;
             	end 
                 PROCESSING: begin
                     y <= y + mult;
+                    //done<=1;
                 end
-                DONE: begin
-                    done <= 1'b1;
-                end
+                // DONE: begin
+                //    // done <= 1'b0;
+                // end
             endcase
         end
     end
