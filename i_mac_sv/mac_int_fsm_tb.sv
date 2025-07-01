@@ -7,9 +7,9 @@ module mac_int_fsm_tb();
 logic clk;
 logic rst;
 logic vld;
-logic [15:0]alpha;
-logic [15:0]beta;
-logic [31:0]gamma;
+logic signed [15:0]alpha;
+logic signed [15:0]beta;
+logic signed [31:0]gamma;
 logic d;
 // module mac_int_fsm (
 //     input  logic         clk,
@@ -38,6 +38,11 @@ mac_int_fsm DUT(
 initial begin
     clk = 0;
     rst = 1;
+    alpha = 0;
+    beta = 0;
+    gamma = 0;
+    d = 0;
+    //positive case tests:
     #10
     rst = 0;
     alpha=16'd30;
@@ -59,6 +64,28 @@ initial begin
     #10 vld=0;
     #30 alpha=16'd100;
     beta=16'd24;
+    vld=1;
+    #10 vld=0;
+
+    //negative case tests:
+    #30 alpha=16'd100;
+    beta=-16'd2;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=16'd11;
+    beta=-16'd11;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=16'd7;
+    beta=16'd2;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=16'd40;
+    beta=-16'd50;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=-16'd111;
+    beta=-16'd2;
     vld=1;
     #10 vld=0;
     #50 rst=1;
