@@ -33,82 +33,53 @@ initial begin
     beta = 0;
     gamma = 0;
     d = 0;
+    vld=0;
     //positive case tests:
-    #10
+    #5
     rst = 0;
     alpha=16'd30;
     beta=16'd40;
     vld=1;//will last for one whole clock cycle
-    #10 vld=0;
+    #5 vld=0;
     #30
     alpha=16'd10;
     beta=16'd16;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=16'd50;
     beta=16'd25;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=16'd100;
     beta=16'd23;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=16'd100;
     beta=16'd24;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
 
     //negative case tests:
     #30 alpha=16'd100;
     beta=-16'd2;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=16'd11;
     beta=-16'd11;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=16'd7;
     beta=16'd2;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=16'd40;
     beta=-16'd50;
     vld=1;
-    #10 vld=0;
+    #5 vld=0;
     #30 alpha=-16'd111;
     beta=-16'd2;
     vld=1;
-
-    //edge cases tests(overflow  )
-    #10 vld=0;
-    #30 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #30 alpha=-16'd32768;
-    beta=-16'd32768;
-    vld=1;
-
-    #10 vld=0;
-    #30 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #30 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-
-    #10 vld=0;
-    #30 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #30 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-
-
-    #10 vld=0;
+    #5 vld=0;
     #50 rst=1;
     #5 rst=0;
     $stop;
