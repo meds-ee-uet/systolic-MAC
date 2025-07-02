@@ -78,6 +78,36 @@ initial begin
     #30 alpha=-16'd111;
     beta=-16'd2;
     vld=1;
+
+    //edge cases tests(overflow  )
+    #10 vld=0;
+    #30 alpha=16'd32767;
+    beta=16'd32767;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=-16'd32768;
+    beta=-16'd32768;
+    vld=1;
+
+    #10 vld=0;
+    #30 alpha=-16'd32768;
+    beta=16'd32767;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=16'd32767;
+    beta=-16'd32768;
+    vld=1;
+
+    #10 vld=0;
+    #30 alpha=16'd32767;
+    beta=16'd32767;
+    vld=1;
+    #10 vld=0;
+    #30 alpha=16'd32767;
+    beta=16'd32767;
+    vld=1;
+
+
     #10 vld=0;
     #50 rst=1;
     #5 rst=0;
