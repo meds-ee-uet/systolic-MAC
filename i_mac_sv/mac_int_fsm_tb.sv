@@ -11,15 +11,6 @@ logic signed [15:0]alpha;
 logic signed [15:0]beta;
 logic signed [31:0]gamma;
 logic d;
-// module mac_int_fsm (
-//     input  logic         clk,
-//     input  logic         reset,
-//     input  logic         valid,
-//     input  logic signed [15:0] A,
-//     input  logic signed [15:0] B,
-//     output logic signed [31:0] y,
-//     output logic         done
-// );
 
 //clock generation
 always #5 clk = ~clk;
@@ -47,7 +38,7 @@ initial begin
     rst = 0;
     alpha=16'd30;
     beta=16'd40;
-    vld=1;
+    vld=1;//will last for one whole clock cycle
     #10 vld=0;
     #30
     alpha=16'd10;
