@@ -4,19 +4,19 @@ module mac_int_fsm (
     input  logic         clk,
     input  logic         reset,
     input  logic         valid,
-    input  logic signed [15:0] A,
-    input  logic signed [15:0] B,
-    output logic signed [31:0] y,
+    input  logic signed [7:0] A,
+    input  logic signed [7:0] B,
+    output logic signed [15:0] y,
     output logic overflow,
     output logic         done
 );
     logic enA, enB,enAcc, rsA, rsB, rsAcc;
-    logic signed [15:0] reg_A_out, reg_B_out;
-    logic signed [31:0] acc_reg_out, acc_reg_in;
+    logic signed [7:0] reg_A_out, reg_B_out;
+    logic signed [15:0] reg_acc_out, reg_acc_in;
 
     //registers declarations:
     //reg A
-    reg_def #(.WIDTH(16)) u_reg16 (
+    reg_def #(.WIDTH(8)) reg_A (
     .x(A),
     .enable(enA),
     .clk(clk),
@@ -24,7 +24,7 @@ module mac_int_fsm (
     .y(reg_A_out)
 );
     //reg B
-    reg_def #(.WIDTH(16)) u_reg16_2 (
+    reg_def #(.WIDTH(8)) reg_B (
     .x(B),
     .enable(enB),
     .clk(clk),
@@ -32,12 +32,12 @@ module mac_int_fsm (
     .y(reg_B_out)
 );
     //accumulator reg
-    reg_def #(.WIDTH(32)) u_reg32 (
-    .x(acc_reg_in),
+    reg_def #(.WIDTH(16)) reg_Acc (
+    .x(reg_acc_in),
     .enable(enAcc),
     .clk(clk),
     .clear(rsAcc),
-    .y(acc_reg_out)
+    .y(reg_acc_out)
 );
 
     // FSM states
@@ -50,7 +50,7 @@ module mac_int_fsm (
 
     state_t state, next_state;
 
-    logic signed [31:0] mult;
+    logic signed [15:0] mult;
 
     // Combinational multiplier
     always_comb begin
@@ -109,7 +109,7 @@ module mac_int_fsm (
             rsA <= 1'b1; // Reset A register
             rsB <= 1'b1; // Reset B register
             rsAcc <= 1'b1; // Reset accumulator register
-            acc_reg_in <= 32'd0;
+            reg_acc_in <= 16'd0;
             // done <= 1'b0;
         end
         else begin
@@ -117,16 +117,16 @@ module mac_int_fsm (
             rsA <= 1'b0; // Clear reset for A register
             rsB <= 1'b0; // Clear reset for B register
             rsAcc <= 1'b0; // Clear reset for accumulator register
-            // acc_reg_in <= acc_reg_in; // Initialize accumulator input
+            // reg_acc_in <= reg_acc_in; // Initialize accumulator input
             case (state)
                 PROCESSING: begin
-                    acc_reg_in <= acc_reg_out + mult;
+                    reg_acc_in <= reg_acc_out + mult;
                     //done<=1;
                 end
             endcase
         end
     end
-    assign overflow = ~(acc_reg_out[31] ^ mult[31]) && (mult[31] ^ acc_reg_in[31]);
-    assign y = acc_reg_out; // Output the accumulated value
+    assign overflow = ~(reg_acc_out[15] ^ mult[15]) && (mult[15] ^ reg_acc_in[15]);
+    assign y = reg_acc_out; // Output the accumulated value
 endmodule
 
