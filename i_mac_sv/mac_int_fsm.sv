@@ -7,6 +7,7 @@ module mac_int_fsm (
     input  logic signed [15:0] A,
     input  logic signed [15:0] B,
     output logic signed [31:0] y,
+    output logic overflow,
     output logic         done
 );
     logic enA, enB,enAcc, rsA, rsB, rsAcc;
@@ -125,6 +126,7 @@ module mac_int_fsm (
             endcase
         end
     end
+    assign overflow = ~(acc_reg_out[31] ^ mult[31]) && (mult[31] ^ acc_reg_in[31]);
     assign y = acc_reg_out; // Output the accumulated value
 endmodule
 
