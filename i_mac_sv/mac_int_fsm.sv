@@ -1,18 +1,19 @@
 `timescale 1ns/1ps
 
+//8 bit signed multiplier, with 16 bit intermediate, with 32 bit accumulator
 module mac_int_fsm (
     input  logic         clk,
     input  logic         reset,
     input  logic         valid,
     input  logic signed [7:0] A,
     input  logic signed [7:0] B,
-    output logic signed [15:0] y,
+    output logic signed [31:0] y,
     output logic overflow,
     output logic         done
 );
     logic enA, enB,enAcc, rsA, rsB, rsAcc;
     logic signed [7:0] reg_A_out, reg_B_out;
-    logic signed [15:0] reg_acc_out, reg_acc_in;
+    logic signed [31:0] reg_acc_out, reg_acc_in;
 
     //registers declarations:
     //reg A
@@ -32,7 +33,7 @@ module mac_int_fsm (
     .y(reg_B_out)
 );
     //accumulator reg
-    reg_def #(.WIDTH(16)) reg_Acc (
+    reg_def #(.WIDTH(32)) reg_Acc (
     .x(reg_acc_in),
     .enable(enAcc),
     .clk(clk),
@@ -109,7 +110,7 @@ module mac_int_fsm (
             rsA <= 1'b1; // Reset A register
             rsB <= 1'b1; // Reset B register
             rsAcc <= 1'b1; // Reset accumulator register
-            reg_acc_in <= 16'd0;
+            reg_acc_in <= 32'd0;
             // done <= 1'b0;
         end
         else begin
@@ -121,12 +122,11 @@ module mac_int_fsm (
             case (state)
                 PROCESSING: begin
                     reg_acc_in <= reg_acc_out + mult;
-                    //done<=1;
                 end
             endcase
         end
     end
-    assign overflow = ~(reg_acc_out[15] ^ mult[15]) && (mult[15] ^ reg_acc_in[15]);
+    assign overflow = ~(reg_acc_out[31] ^ mult[15]) && (mult[15] ^ reg_acc_in[31]);
     assign y = reg_acc_out; // Output the accumulated value
 endmodule
 

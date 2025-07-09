@@ -1,200 +1,83 @@
 `timescale 1ns/1ps
 
-
 module mac_int_fsm_tb();
 
-//initializing test signals:
-logic clk;
-logic rst;
-logic vld;
-logic signed [15:0]alpha;
-logic signed [15:0]beta;
-logic signed [31:0]gamma;
-logic d;
+  // Testbench signals
+  logic clk;
+  logic rst;
+  logic vld;
+  logic signed [7:0] alpha;
+  logic signed [7:0] beta;
+  logic signed [15:0] gamma;
+  logic of;
+  logic d;
 
-//clock generation
-always #5 clk = ~clk;
+  // Clock generation: 10ns period
+  always #5 clk = ~clk;
 
-mac_int_fsm DUT(
+  // DUT instantiation
+  mac_int_fsm DUT (
     .clk(clk),
     .reset(rst),
     .valid(vld),
     .A(alpha),
     .B(beta),
     .y(gamma),
+    .overflow(of),
     .done(d)
-);
+  );
 
-//test
-initial begin
+  // Main stimulus
+  initial begin
+    // Initialize
     clk = 0;
     rst = 1;
     alpha = 0;
     beta = 0;
     gamma = 0;
-    d = 0;
-    vld=0;
-    //positive case tests:
-    #10
-    rst = 0;
-    alpha=16'd30;
-    beta=16'd40;
-    vld=1;//will last for one whole clock cycle
-    #10 vld=0;
-    #100
-    alpha=16'd10;
-    beta=16'd16;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd50;
-    beta=16'd25;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd100;
-    beta=16'd23;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd100;
-    beta=16'd24;
-    vld=1;
-    #10 vld=0;
+    vld = 0;
 
-    //negative case tests:
-    #100 alpha=16'd100;
-    beta=-16'd2;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd11;
-    beta=-16'd11;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd7;
-    beta=16'd2;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd40;
-    beta=-16'd50;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd111;
-    beta=-16'd2;
-    vld=1;
+    #10 rst = 0;
 
-    //edge cases tests(overflow  )
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=-16'd32768;
-    vld=1;
+    // Positive MAC tests
+    apply_mac(8'd30, 8'd40);
+    apply_mac(8'd10, 8'd8);
+    apply_mac(8'd50, 8'd25);
+    apply_mac(8'd100, 8'd23);
+    apply_mac(8'd100, 8'd24);
 
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
+    // Negative MAC tests
+    apply_mac(8'd100, -8'd2);
+    apply_mac(8'd11, -8'd11);
+    apply_mac(8'd7, 8'd2);
+    apply_mac(8'd40, -8'd50);
+    apply_mac(-8'd111, -8'd2);
 
+    // Edge case test: loop until overflow
+    $monitor("== Starting Overflow Detection Loop ==");
+    fork
+      begin
+        forever begin
+          apply_mac(-8'd127, 8'd127);//remove - to test for postive overflow
+        end
+      end
+      begin
+        wait (of == 1);
+        $stop;
+      end
+    join_any
+    disable fork;
+  end
 
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=-16'd32768;
-    beta=16'd32767;
-    vld=1;
-    #10 vld=0;
-    #100 alpha=16'd32767;
-    beta=-16'd32768;
-    vld=1;
-
-
-    #10 vld=0;
-    #100 rst=1;
-    #10 rst=0;
-    $stop;
-end 
-
+  // Task to apply a MAC operation
+  task apply_mac(input signed [7:0] a, input signed [7:0] b);
+    begin
+      #100;
+      alpha = a;
+      beta  = b;
+      vld   = 1;
+      #10 vld = 0;
+    end
+  endtask
 
 endmodule
