@@ -1,0 +1,103 @@
+project open /home/waleed/Documents/MAC-TESTING/mac_testing
+# Loading project mac_testing
+# Compile of counter.sv was successful.
+# Compile of mac_unit.sv was successful.
+# Compile of reg_def.sv was successful.
+# Compile of counter_tb.sv was successful.
+# Compile of pe.sv failed with 2 errors.
+# Compile of data_feeder.sv was successful.
+# Compile of data_feeder_tb.sv was successful.
+# 7 compiles, 1 failed with 2 errors.
+# Compile of counter.sv was successful.
+# Compile of mac_unit.sv was successful.
+# Compile of reg_def.sv was successful.
+# Compile of counter_tb.sv was successful.
+# Compile of pe.sv failed with 1 errors.
+# Compile of data_feeder.sv was successful.
+# Compile of data_feeder_tb.sv was successful.
+# 7 compiles, 1 failed with 1 error.
+# Compile of counter.sv was successful.
+# Compile of mac_unit.sv was successful.
+# Compile of reg_def.sv was successful.
+# Compile of counter_tb.sv was successful.
+# Compile of data_feeder.sv was successful.
+# Compile of data_feeder_tb.sv was successful.
+# 6 compiles, 0 failed with no errors.
+vsim work.data_feeder_tb
+# vsim work.data_feeder_tb 
+# Start time: 15:25:16 on Jul 11,2025
+# Loading sv_std.std
+# Loading work.data_feeder_tb
+# Loading work.data_feeder
+# couldn't load file "/home/waleed/intelFPGA/20.1/modelsim_ase/linux/ScintillaTk/libScintillaTk1.14.so": libstdc++.so.6: cannot open shared object file: No such file or directory
+add wave sim:/data_feeder_tb/DUT/*
+run
+# 
+#  Burst 1 
+# Time 15000 | Byte 1: data_out = 0x77
+# Time 35000 | Byte 2: data_out = 0x66
+# Time 55000 | Byte 3: data_out = 0x55
+# Time 75000 | Byte 4: data_out = 0x44
+# Time 95000 | Byte 5: data_out = 0x33
+# Time 115000 | Byte 6: data_out = 0x22
+# Time 135000 | Byte 7: data_out = 0x11
+# 
+#  Burst 2 
+# Time 195000 | Byte 1: data_out = 0x7
+# Time 215000 | Byte 2: data_out = 0xf6
+# Time 235000 | Byte 3: data_out = 0xe5
+# Time 255000 | Byte 4: data_out = 0xd4
+# Time 275000 | Byte 5: data_out = 0xc3
+# Time 295000 | Byte 6: data_out = 0xb2
+# Time 315000 | Byte 7: data_out = 0xa1
+# 
+# == All data fed. Test complete. ==
+# ** Note: $finish    : /home/waleed/Documents/Systolic-MAC/testbench/data_feeder_tb.sv(62)
+#    Time: 325 ns  Iteration: 1  Instance: /data_feeder_tb
+# 1
+# Break in Module data_feeder_tb at /home/waleed/Documents/Systolic-MAC/testbench/data_feeder_tb.sv line 62
+# couldn't load file "/home/waleed/intelFPGA/20.1/modelsim_ase/linux/ScintillaTk/libScintillaTk1.14.so": libstdc++.so.6: cannot open shared object file: No such file or directory
+# list element in quotes followed by ":" instead of space
+# Compile of counter.sv was successful.
+# Compile of mac_unit.sv was successful.
+# Compile of reg_def.sv was successful.
+# Compile of counter_tb.sv was successful.
+# Compile of data_feeder.sv was successful.
+# Compile of data_feeder_tb.sv failed with 2 errors.
+# 6 compiles, 1 failed with 2 errors.
+# Compile of counter.sv was successful.
+# Compile of mac_unit.sv was successful.
+# Compile of reg_def.sv was successful.
+# Compile of counter_tb.sv was successful.
+# Compile of data_feeder.sv was successful.
+# Compile of data_feeder_tb.sv was successful.
+# 6 compiles, 0 failed with no errors.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# Loading work.data_feeder_tb
+# Loading work.data_feeder
+run
+# 
+#  Burst 1 
+# Time 15000 | Byte 1: data_out = 0x77
+# Time 35000 | Byte 2: data_out = 0x66
+# Time 55000 | Byte 3: data_out = 0x55
+# Time 75000 | Byte 4: data_out = 0x44
+# Time 95000 | Byte 5: data_out = 0x33
+# Time 115000 | Byte 6: data_out = 0x22
+# 
+#  Burst 2 
+# Time 175000 | Byte 1: data_out = 0x7
+# Time 195000 | Byte 2: data_out = 0xf6
+# Time 215000 | Byte 3: data_out = 0xe5
+# Time 235000 | Byte 4: data_out = 0xd4
+# Time 255000 | Byte 5: data_out = 0xc3
+# Time 275000 | Byte 6: data_out = 0xb2
+# 
+# == All data fed. Test complete. ==
+# ** Note: $finish    : /home/waleed/Documents/Systolic-MAC/testbench/data_feeder_tb.sv(62)
+#    Time: 285 ns  Iteration: 1  Instance: /data_feeder_tb
+# 1
+# Break in Module data_feeder_tb at /home/waleed/Documents/Systolic-MAC/testbench/data_feeder_tb.sv line 62
+# couldn't load file "/home/waleed/intelFPGA/20.1/modelsim_ase/linux/ScintillaTk/libScintillaTk1.14.so": libstdc++.so.6: cannot open shared object file: No such file or directory
+# list element in quotes followed by ":" instead of space
