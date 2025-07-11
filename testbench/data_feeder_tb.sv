@@ -48,11 +48,6 @@ module data_feeder_tb;
   endtask
 
   initial begin
-    //To run in GTKWave
-    $dumpfile("data_feeder_tb.vcd");
-    $dumpvars(0, data_feeder_tb);
-
-
     // Feed first 56-bit burst
     feed_burst(56'h11223344556677, "Burst 1");
 
