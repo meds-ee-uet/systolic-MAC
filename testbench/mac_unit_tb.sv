@@ -37,6 +37,9 @@ module mac_unit_tb();
     gamma = 0;
     vld = 0;
 
+    $monitor("Time=%0t | A=%0d B=%0d mult=%0d acc=%0d overflow=%b done=%b", 
+          $time, alpha, beta, DUT.mult, DUT.reg_acc_out, of, d);
+
     #10 rst = 0;
 
     // Positive MAC tests
@@ -58,11 +61,12 @@ module mac_unit_tb();
     fork
       begin
         forever begin
-          apply_mac(-8'd127, 8'd127);//remove - to test for postive overflow
+          apply_mac(8'd127, 8'd127);//include - to test for negative overflow
         end
       end
       begin
         wait (of == 1);
+        $display("!!! OVERFLOW DETECTED at time %0t, result = %0d !!!", $time, gamma);
         $stop;
       end
     join_any
