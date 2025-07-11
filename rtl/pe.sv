@@ -1,6 +1,6 @@
-timescale 1ns/1ps
+`timescale 1ns/1ps
 
-module pe{
+module pe(
     input logic clk,
     input logic reset,
     input logic valid,
@@ -12,7 +12,7 @@ module pe{
     output logic overflow,
     output logic done,
     output logic valid_out
-};
+);
 
     logic signed [31:0] y;
     logic en_y;

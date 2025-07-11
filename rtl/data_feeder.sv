@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 module data_feeder(
     input  logic        clk, 
     input  logic [55:0] data_in,   // 7 × 8 bits
