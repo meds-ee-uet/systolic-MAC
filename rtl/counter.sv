@@ -16,7 +16,11 @@ module counter(
                 count <= count + 3'b1;
             end
         end else begin
-            count <= count;
+            if (count == 3'b111) begin
+                count <= 3'b0; // Reset count if it reaches 7
+            end else begin
+                count <= count; // Maintain current count
+            end
         end
     end
     
