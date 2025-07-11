@@ -26,7 +26,7 @@ module pe{
         .overflow(overflow),
         .done(done)
     );
-    #(.WIDTH(8))
+
     reg_def reg_A (
         .x(A_in),
         .enable(done),
