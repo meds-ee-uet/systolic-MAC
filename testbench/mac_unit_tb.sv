@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
-module mac_int_fsm_tb();
-
+module mac_unit_tb();
+/
   // Testbench signals
   logic clk;
   logic rst;
@@ -16,7 +16,7 @@ module mac_int_fsm_tb();
   always #5 clk = ~clk;
 
   // DUT instantiation
-  mac_int_fsm DUT (
+  mac_unit DUT (
     .clk(clk),
     .reset(rst),
     .valid(vld),
