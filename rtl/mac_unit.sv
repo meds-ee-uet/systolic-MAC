@@ -17,7 +17,7 @@ module mac_unit (
 
     //registers declarations:
     //reg A
-    reg_def #(.WIDTH(8)) reg_A (
+    reg_def reg_A (
     .x(A),
     .enable(enA),
     .clk(clk),
@@ -25,7 +25,7 @@ module mac_unit (
     .y(reg_A_out)
 );
     //reg B
-    reg_def #(.WIDTH(8)) reg_B (
+    reg_def reg_B (
     .x(B),
     .enable(enB),
     .clk(clk),

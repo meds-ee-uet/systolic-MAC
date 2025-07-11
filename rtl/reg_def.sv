@@ -1,5 +1,5 @@
 module reg_def #(
-    parameter int WIDTH = 16 // Default to 16 bits
+    parameter int WIDTH = 8 // Default to 8 bits
 )(
     input  logic [WIDTH-1:0] x,
     input  logic             enable,
