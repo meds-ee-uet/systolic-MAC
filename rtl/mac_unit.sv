@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 //8 bit signed multiplier, with 16 bit intermediate, with 32 bit accumulator
-module mac_int_fsm (
+module mac_unit (
     input  logic         clk,
     input  logic         reset,
     input  logic         valid,

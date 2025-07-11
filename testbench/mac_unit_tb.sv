@@ -1,87 +1,93 @@
+// mac_unit_tb.sv
 `timescale 1ns/1ps
+module mac_unit_tb;
 
-module mac_unit_tb();
-/
-  // Testbench signals
-  logic clk;
-  logic rst;
-  logic vld;
-  logic signed [7:0] alpha;
-  logic signed [7:0] beta;
-  logic signed [15:0] gamma;
-  logic of;
-  logic d;
+//-----------------------------------------------------------------------------
+// DUT signals
+logic clk   = 0;
+logic rst   = 1;               // start in reset
+logic vld   = 0;
+logic signed [7:0]  alpha = 0, beta = 0;
+logic signed [31:0] gamma;
+logic of, d;
 
-  // Clock generation: 10ns period
-  always #5 clk = ~clk;
+//-----------------------------------------------------------------------------
+// 10 ns‑period clock
+always #5 clk = ~clk;
 
-  // DUT instantiation
-  mac_unit DUT (
-    .clk(clk),
-    .reset(rst),
-    .valid(vld),
-    .A(alpha),
-    .B(beta),
-    .y(gamma),
-    .overflow(of),
-    .done(d)
-  );
+//-----------------------------------------------------------------------------
+// DUT instantiation
+mac_unit DUT (
+    .clk      (clk),
+    .reset    (rst),
+    .valid    (vld),
+    .A        (alpha),
+    .B        (beta),
+    .y        (gamma),
+    .overflow (of),
+    .done     (d)
+);
 
-  // Main stimulus
-  initial begin
-    // Initialize
-    clk = 0;
-    rst = 1;
-    alpha = 0;
-    beta = 0;
-    gamma = 0;
-    vld = 0;
+//-----------------------------------------------------------------------------
+// Events & flags
+event pos_of_event, neg_of_event;
+bit   pos_of_seen = 0, neg_of_seen = 0;
 
-    $monitor("Time=%0t | A=%0d B=%0d mult=%0d acc=%0d overflow=%b done=%b", 
-          $time, alpha, beta, DUT.mult, DUT.reg_acc_out, of, d);
+//-----------------------------------------------------------------------------
+// Overflow monitors
+// Use the value that actually caused the overflow: DUT.reg_acc_in
+always_ff @(posedge clk) begin
+    if (of && DUT.reg_acc_in[31] == 1'b0 && !pos_of_seen)
+        -> pos_of_event;                        // positive overflow
+    if (of && DUT.reg_acc_in[31] == 1'b1 && !neg_of_seen)
+        -> neg_of_event;                        // negative overflow
+end
 
-    #10 rst = 0;
+//-----------------------------------------------------------------------------
+// Stimulus: continually feed operands that will generate both overflows
+initial begin
+    // release reset
+    repeat (2) @(posedge clk);
+    rst = 0;
 
-    // Positive MAC tests
-    apply_mac(8'd30, 8'd40);
-    apply_mac(8'd10, 8'd8);
-    apply_mac(8'd50, 8'd25);
-    apply_mac(8'd100, 8'd23);
-    apply_mac(8'd100, 8'd24);
-
-    // Negative MAC tests
-    apply_mac(8'd100, -8'd2);
-    apply_mac(8'd11, -8'd11);
-    apply_mac(8'd7, 8'd2);
-    apply_mac(8'd40, -8'd50);
-    apply_mac(-8'd111, -8'd2);
-
-    // Edge case test: loop until overflow
-    $monitor("== Starting Overflow Detection Loop ==");
-    fork
-      begin
-        forever begin
-          apply_mac(8'd127, 8'd127);//include - to test for negative overflow
-        end
-      end
-      begin
-        wait (of == 1);
-        $display("!!! OVERFLOW DETECTED at time %0t, result = %0d !!!", $time, gamma);
-        $stop;
-      end
-    join_any
-    disable fork;
-  end
-
-  // Task to apply a MAC operation
-  task apply_mac(input signed [7:0] a, input signed [7:0] b);
-    begin
-      #100;
-      alpha = a;
-      beta  = b;
-      vld   = 1;
-      #10 vld = 0;
+    forever begin
+        apply_mac( 8'sd127 ,  8'sd127 );   // drives toward +2 147 483 647
+        apply_mac(-8'sd128 ,  8'sd127 );   // drives toward −2 147 483 648
     end
-  endtask
+end
+
+//-----------------------------------------------------------------------------
+// On first (positive) overflow
+initial begin
+    @(pos_of_event);
+    pos_of_seen = 1;
+    $display("\n*** POSITIVE overflow detected at %0t, acc_in = %0d ***",
+             $time, DUT.reg_acc_in);
+    // single‑cycle reset pulse
+    rst = 1; @(posedge clk); rst = 0;
+    $display("*** Reset released — searching for negative overflow ***\n");
+end
+
+//-----------------------------------------------------------------------------
+// On first (negative) overflow → finish
+initial begin
+    @(neg_of_event);
+    neg_of_seen = 1;
+    $display("\n*** NEGATIVE overflow detected at %0t, acc_in = %0d ***",
+             $time, DUT.reg_acc_in);
+    rst = 1; @(posedge clk);
+    $display("*** Test complete — stopping simulation ***");
+    $finish;
+end
+
+//-----------------------------------------------------------------------------
+// Task: single MAC transaction
+task automatic apply_mac (input signed [7:0] a, input signed [7:0] b);
+    alpha <= a;
+    beta  <= b;
+    vld   <= 1;
+    @(posedge clk);
+    vld   <= 0;
+endtask
 
 endmodule
