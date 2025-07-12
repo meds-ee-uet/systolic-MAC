@@ -80,6 +80,15 @@ initial begin
     $finish;
 end
 
+
+initial begin
+    //for gtkwave
+    $dumpfile("mac_unit.vcd");   // VCD file name
+    $dumpvars(0, mac_unit_tb);   // dump everything under the TB
+
+end
+
+
 //-----------------------------------------------------------------------------
 // Task: single MAC transaction
 task automatic apply_mac (input signed [7:0] a, input signed [7:0] b);

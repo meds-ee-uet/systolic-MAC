@@ -34,6 +34,10 @@ int burst        = 0;
 int pulse_number = 0;
 
 initial begin
+     //for gtkwave
+    $dumpfile("counter.vcd");   // VCD file name
+    $dumpvars(0, counter_tb);   // dump everything under the TB
+
     // Let reset stay active for two clocks
     repeat (2) @(posedge clk);
     rst = 0;
