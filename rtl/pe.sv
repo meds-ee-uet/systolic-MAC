@@ -58,12 +58,12 @@ module pe(
         .y(y_out)
     );
 
-    reg_def delay_reg#(.WIDTH(1))(
+    reg_def #(.WIDTH(1)) delay_reg (
         .x(en_y),
         .enable(1'b1),
         .clk(clk),
-        .clear(reset|valid_out),
+        .clear(reset | valid_out),
         .y(valid_out)
-    );
+);
 
 endmodule

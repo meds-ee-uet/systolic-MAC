@@ -27,7 +27,7 @@ module data_feeder_tb;
       @(posedge clk);
       enable <= 0;
       $display("Time %0t | Byte %0d: data_out = 0x%0h", $time, i+1, data_out);
-      @(posedge clk);  // gap for clarity
+      @(posedge clk);  // gap for clarity(2nd clk cycle)
     end
   endtask
 
@@ -48,6 +48,10 @@ module data_feeder_tb;
   endtask
 
   initial begin
+    //for gtkwave
+    $dumpfile("data_feeder.vcd");   // VCD file name
+    $dumpvars(0, data_feeder_tb);   // dump everything under the TB
+
     // Feed first 56-bit burst
     feed_burst(56'h11223344556677, "Burst 1");
 
