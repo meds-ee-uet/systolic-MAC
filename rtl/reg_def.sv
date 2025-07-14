@@ -7,7 +7,7 @@ module reg_def #(
     input  logic             clear,
     output logic [WIDTH-1:0] y
 );
-    always_ff @(posedge clk or posedge clear) begin
+    always_ff @(posedge clk) begin
         if (clear) begin
             y <= {WIDTH{1'b0}}; // Reset to all zeros
         end else if (enable) begin

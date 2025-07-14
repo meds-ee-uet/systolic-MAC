@@ -13,8 +13,8 @@
 # ----------- user‑configurable variables -------------------------------------
 RTL_DIR      := rtl
 TB_DIR       := testbench
-TOP_TB       := data_feeder_tb
-VCD_FILE     := data_feeder.vcd          # matches $dumpfile name
+TOP_TB       := pe_tb
+VCD_FILE     := pe.vcd          # matches $dumpfile name
 SIM_TIME_CMD := run -all                 # or 'run 1us' etc.
 # -----------------------------------------------------------------------------
 

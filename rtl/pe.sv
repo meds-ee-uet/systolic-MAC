@@ -43,14 +43,14 @@ module pe(
         .y(B_out)
     );
 
-    count counter(
+    counter counter(
         .clk(clk),
-        .global_reset(reset),
+        .reset(reset),
         .done(done),
         .en_y(en_y)
     );
 
-    reg_def reg_y(
+    reg_def #(.WIDTH(32)) reg_y(
         .x(y),
         .enable(en_y),
         .clk(clk),
