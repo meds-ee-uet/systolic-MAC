@@ -13,10 +13,10 @@ module data_feeder(
         if (reset) begin
             shift_reg <= data_in;  // Load all 56 bits
         end else if (enable) begin
-            shift_reg <= shift_reg >> 8;  // Shift right by 8 bits each enable
+            shift_reg <= shift_reg << 8;  // Shift left by 8 bits each enable
         end
     end
 
-    assign data_out = shift_reg[7:0];  // Always output lowest 8 bits
+    assign data_out = shift_reg[55:48];  // Always output highest 8 bits
 
 endmodule

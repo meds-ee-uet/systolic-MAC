@@ -133,6 +133,7 @@ module mac_unit (
                 end
 
                 PROCESSING: begin
+                    mult_done <= 1'b0; // Reset multiplication done flag
                     reg_acc_in <= reg_acc_out + mult;
                 end
             endcase
