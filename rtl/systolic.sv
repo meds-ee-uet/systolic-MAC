@@ -112,7 +112,6 @@ module systolic(
                               valid_out[2][0] & valid_out[2][1] & valid_out[2][2] & valid_out[2][3] &
                               valid_out[3][0] & valid_out[3][1] & valid_out[3][2] & valid_out[3][3];
 
-    always_ff @(posedge clk) begin
 
 
 endmodule
