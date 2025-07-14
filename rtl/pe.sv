@@ -9,7 +9,7 @@ module pe(
     output logic signed [31:0] y_out,
     output logic [7:0] A_out,
     output logic [7:0] B_out,
-    output logic overflow,
+    // output logic overflow,
     output logic done,
     output logic valid_out
 );
@@ -23,7 +23,7 @@ module pe(
         .A(A_in),
         .B(B_in),
         .y(y),
-        .overflow(overflow),
+        // .overflow(overflow),
         .done(done)
     );
 

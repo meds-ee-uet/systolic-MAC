@@ -8,7 +8,7 @@ module mac_unit (
     input  logic signed [7:0] A,
     input  logic signed [7:0] B,
     output logic signed [31:0] y,
-    output logic overflow,
+    // output logic overflow,
     output logic         done
 );
     logic enA, enB,enAcc, rsA, rsB, rsAcc;
@@ -53,10 +53,12 @@ module mac_unit (
 
     logic signed [15:0] mult;
 
+    logic mult_done;
+
     // Combinational multiplier
-    always_comb begin
-        mult = reg_A_out * reg_B_out;
-    end
+    // always_comb begin
+    //     mult = reg_A_out * reg_B_out;
+    // end
 
     // State transition logic
     always_comb begin
@@ -78,7 +80,12 @@ module mac_unit (
                 // Enable loading A and B only
                 enA = 1;
                 enB = 1;
-                next_state = PROCESSING;
+                if (mult_done) begin
+                    next_state = PROCESSING;
+                end
+                else begin
+                    next_state = LOAD; // Stay in LOAD until multiplication is done
+                end
             end
 
             PROCESSING: begin
@@ -120,13 +127,18 @@ module mac_unit (
             rsAcc <= 1'b0; // Clear reset for accumulator register
             // reg_acc_in <= reg_acc_in; // Initialize accumulator input
             case (state)
+                LOAD:begin
+                    mult <= reg_A_out * reg_B_out; // Perform multiplication
+                    mult_done<=1'b1; // Indicate multiplication is done
+                end
+
                 PROCESSING: begin
                     reg_acc_in <= reg_acc_out + mult;
                 end
             endcase
         end
     end
-    assign overflow = ~(reg_acc_out[31] ^ mult[15]) && (mult[15] ^ reg_acc_in[31]);
+    // assign overflow = (~(reg_acc_out[31] ^ mult[15]) && (mult[15] ^ reg_acc_in[31])) ? 1'b1 : 1'b0; // Check for overflow condition
     assign y = reg_acc_out; // Output the accumulated value
 endmodule
 
