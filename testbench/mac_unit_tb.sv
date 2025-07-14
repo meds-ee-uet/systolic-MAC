@@ -10,7 +10,7 @@ module mac_unit_tb;
   logic done;
 
   // Instantiate the DUT
-  mac_unit uut (
+  mac_unit dut (
     .clk(clk),
     .reset(reset),
     .valid(valid),
@@ -25,7 +25,10 @@ module mac_unit_tb;
 
   initial begin
     // Initialize
-    reset = 1; valid = 0; A = 0; B = 0;
+    reset = 1; 
+    valid = 0; 
+    A = 0; 
+    B = 0;
     #15; // hold reset for some time
     reset = 0;
 

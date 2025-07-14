@@ -21,8 +21,8 @@ module data_feeder_tb;
   );
 
   // Shift 7 times with enable = 1
-  task automatic shift_6_bytes();
-    for (int i = 0; i < 6; i++) begin
+  task automatic shift_7_bytes();
+    for (int i = 0; i < 7; i++) begin
       enable <= 1;
       @(posedge clk);
       enable <= 0;
@@ -43,7 +43,7 @@ module data_feeder_tb;
       reset <= 0;
 
       // Shift bytes
-      shift_6_bytes();
+      shift_7_bytes();
     end
   endtask
 

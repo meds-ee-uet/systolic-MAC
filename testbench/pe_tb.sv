@@ -11,7 +11,7 @@ module pe_tb;
   // DUT outputs
   wire signed [31:0] y_out;
   wire [7:0] A_out, B_out;
-  wire overflow;
+  //wire overflow;
   wire done;
   wire valid_out;
 
@@ -25,7 +25,7 @@ module pe_tb;
     .y_out(y_out),
     .A_out(A_out),
     .B_out(B_out),
-    .overflow(overflow),
+    //.overflow(overflow),
     .done(done),
     .valid_out(valid_out)
   );
@@ -42,7 +42,7 @@ module pe_tb;
     // Initialize clock
     clk = 0;
 
-    // Initialize input vectors (ModelSim doesn't like SystemVerilog {} syntax)
+    // Initialize input vectors
     A_vals[0] = 7'd10;
     A_vals[1] = -7'd20;
     A_vals[2] = 7'd30;
@@ -82,8 +82,8 @@ module pe_tb;
       // Wait for done to go high
       wait (done == 1);
 
-      $display("[%0t] A_in=%0d B_in=%0d -> y_out=%0d A_out=%0d B_out=%0d overflow=%b valid_out=%b",
-               $time, A_in, B_in, y_out, A_out, B_out, overflow, valid_out);
+      $display("[%0t] A_in=%0d B_in=%0d -> y_out=%0d A_out=%0d B_out=%0d  valid_out=%b",
+               $time, A_in, B_in, y_out, A_out, B_out,  valid_out);
 
       // Wait for done to drop back to 0
       @(posedge clk);
