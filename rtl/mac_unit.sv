@@ -67,7 +67,8 @@ module mac_unit (
         enA = 0;
         enB = 0;
         enAcc = 0;
-        done = 0;
+        done = 0;   
+        // Reset multiplication done flag
 
         case (state)
             IDLE: begin
@@ -118,6 +119,7 @@ module mac_unit (
             rsB <= 1'b1; // Reset B register
             rsAcc <= 1'b1; // Reset accumulator register
             reg_acc_in <= 32'd0;
+            mult_done <= 1'b0; // Reset multiplication done flag
             // done <= 1'b0;
         end
         else begin
