@@ -1,85 +1,108 @@
-// mac_unit_tb.sv
 `timescale 1ns/1ps
+
 module mac_unit_tb;
 
-//-----------------------------------------------------------------------------
-// DUT signals
-logic clk   = 0;
-logic rst   = 1;               // start in reset
-logic vld   = 0;
-logic signed [7:0]  alpha = 0, beta = 0;
-logic signed [31:0] gamma;
-logic of, d;
+  logic clk = 0;
+  logic reset;
+  logic valid;
+  logic signed [7:0] A, B;
+  logic signed [31:0] y;
+  logic done;
 
-//-----------------------------------------------------------------------------
-// 10 ns‑period clock
-always #5 clk = ~clk;
+  // Instantiate the DUT
+  mac_unit uut (
+    .clk(clk),
+    .reset(reset),
+    .valid(valid),
+    .A(A),
+    .B(B),
+    .y(y),
+    .done(done)
+  );
 
-//-----------------------------------------------------------------------------
-// DUT instantiation
-mac_unit DUT (
-    .clk      (clk),
-    .reset    (rst),
-    .valid    (vld),
-    .A        (alpha),
-    .B        (beta),
-    .y        (gamma),
-    .overflow (of),
-    .done     (d)
-);
+  // Clock generation
+  always #5 clk = ~clk; // 10ns clock period
 
-//-----------------------------------------------------------------------------
-// Events & flags
-event pos_of_event, neg_of_event;
-bit   pos_of_seen = 0, neg_of_seen = 0;
+  initial begin
+    // Initialize
+    reset = 1; valid = 0; A = 0; B = 0;
+    #15; // hold reset for some time
+    reset = 0;
 
-//-----------------------------------------------------------------------------
-// Overflow monitors
-// Use the value that actually caused the overflow: DUT.reg_acc_in
-always_ff @(posedge clk) begin
-    if (of && DUT.reg_acc_in[31] == 1'b0 && !pos_of_seen)
-        -> pos_of_event;                        // positive overflow
-    if (of && DUT.reg_acc_in[31] == 1'b1 && !neg_of_seen)
-        -> neg_of_event;                        // negative overflow
-end
+    // 1st pair
+    A = 8'd5;
+    B = 8'd3;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk); 
+    $display("y after 1st: %0d", y);
 
-//-----------------------------------------------------------------------------
-// Stimulus: continually feed operands that will generate both overflows
-initial begin
-    // release reset
-    repeat (2) @(posedge clk);
-    rst = 0;
+    // 2nd pair
+    A = 8'd4;
+    B = -8'd2;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk); 
+    $display("y after 2nd: %0d", y);
 
-    forever begin
-        apply_mac( 8'sd127 ,  8'sd127 );   // drives toward +2 147 483 647
-        apply_mac(-8'sd128 ,  8'sd127 );   // drives toward −2 147 483 648
-    end
-end
+    // 3rd pair
+    A = -8'd6;
+    B = 8'd1;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk);
+    $display("y after 3rd: %0d", y);
 
-//-----------------------------------------------------------------------------
-// On first (positive) overflow
-initial begin
-    @(pos_of_event);
-    pos_of_seen = 1;
-    $display("\n*** POSITIVE overflow detected at %0t, acc_in = %0d ***",
-             $time, DUT.reg_acc_in);
-    // single‑cycle reset pulse
-    rst = 1; @(posedge clk); rst = 0;
-    $display("*** Reset released — searching for negative overflow ***\n");
-end
+    // 4th pair
+    A = 8'd7;
+    B = 8'd2;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk);
+    $display("y after 4th: %0d", y);
 
-//-----------------------------------------------------------------------------
-// On first (negative) overflow → finish
-initial begin
-    @(neg_of_event);
-    neg_of_seen = 1;
-    $display("\n*** NEGATIVE overflow detected at %0t, acc_in = %0d ***",
-             $time, DUT.reg_acc_in);
-    rst = 1; @(posedge clk);
-    $display("*** Test complete — stopping simulation ***");
+    // 5th pair
+    A = -8'd3;
+    B = -8'd4;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk);
+    $display("y after 5th: %0d", y);
+
+    // 6th pair
+    A = 8'd2;
+    B = 8'd6;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk);
+    $display("y after 6th: %0d", y);
+
+    // 7th pair
+    A = -8'd1;
+    B = 8'd5;
+    valid = 1;
+    #10;
+    valid = 0;
+    wait(done);
+    @(posedge clk);
+    $display("y after 7th: %0d", y);
+
+    #20;
+    $display("MAC operation complete.");
     $finish;
-end
-
+  end
 
 initial begin
     //for gtkwave
@@ -88,15 +111,5 @@ initial begin
 
 end
 
-
-//-----------------------------------------------------------------------------
-// Task: single MAC transaction
-task automatic apply_mac (input signed [7:0] a, input signed [7:0] b);
-    alpha <= a;
-    beta  <= b;
-    vld   <= 1;
-    @(posedge clk);
-    vld   <= 0;
-endtask
-
 endmodule
+
