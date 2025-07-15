@@ -85,7 +85,7 @@ module systolic(
     genvar m, n;
     for (m = 0; m < 4; m++) begin : ROW
         for (n = 0; n < 4; n++) begin : COL
-        PE PEij (
+        pe PEij (
             .clk(clk),
             .reset(reset),
             .valid(valid[m][n]),
