@@ -43,13 +43,13 @@ module counter_tb;
     // FIRST TIME
     $display("\n AT FIRST TIME");
 
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
+    pulse_done();   
+    pulse_done();   
+    pulse_done();   
+    pulse_done();   
+    pulse_done();   
+    pulse_done();   
+    pulse_done();   
 
 
     // Check en_y
@@ -65,13 +65,13 @@ module counter_tb;
     //SECOND TIME
     $display("\n AT SECOND TIME");
 
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
-    pulse_done();  repeat (1) @(posedge clk);   
+    pulse_done(); @(posedge clk);   
+    pulse_done(); @(posedge clk);   
+    pulse_done(); @(posedge clk);   
+    pulse_done(); @(posedge clk);   
+    pulse_done(); @(posedge clk);   
+    pulse_done(); @(posedge clk);   
+    pulse_done(); @(posedge clk);   
 
 
 

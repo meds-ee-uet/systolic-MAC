@@ -67,13 +67,14 @@ module mac_unit (
         enA = 0;
         enB = 0;
         enAcc = 0;
-        done = 0;   
+        done = 0;
         reg_acc_in = reg_acc_out;  
         // Reset multiplication done flag
         if(reset) begin
             rsA = 1'b1;
             rsB = 1'b1; 
             rsAcc = 1'b1;
+            mult = 16'b0;   
         end
         else begin
             rsA = 1'b0;

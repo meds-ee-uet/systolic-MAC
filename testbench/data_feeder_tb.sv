@@ -38,6 +38,7 @@ module data_feeder_tb;
 
       // Reset HIGH for 1 cycle to load data
       data_in <= values;
+      @(posedge clk);
       reset <= 1;
       @(posedge clk);
       reset <= 0;

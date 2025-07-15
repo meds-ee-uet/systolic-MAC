@@ -33,9 +33,8 @@ $(shell mkdir -p $(BUILD_DIR))
 lib:
 	$(VLIB) $(WORK_LIB)
 
-compile: lib
-	$(VLOG) -work $(WORK_LIB) "$(RTL_DIR)"/$(TOP).sv "$(TB_DIR)"/$(TOP_TB).sv
-
+compile: lib #$(VLOG) -work $(WORK_LIB) "$(RTL_DIR)"/$(TOP).sv "$(TB_DIR)"/$(TOP_TB).sv
+	$(VLOG) -work $(WORK_LIB) "$(RTL_DIR)"/*.sv "$(TB_DIR)"/*.sv
 sim: compile
 	$(VSIM) $(TOP_TB) -c -lib $(WORK_LIB) \
 	-do "transcript on; $(SIM_TIME_CMD); quit" \
