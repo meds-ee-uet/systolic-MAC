@@ -118,8 +118,11 @@ module systolic(
             state <= next_state;
         end
     end
+
+    //flags
     logic valid_out_flag;
     logic done_flag;
+    
     //next state and output logic
     always_comb begin
 
@@ -157,6 +160,7 @@ module systolic(
             end
             
             FEED:begin
+
                 for(int x=0;x<4;x++)begin
                     en_fr[x]=1'b0;
                     en_fc[x]=1'b0;
@@ -166,9 +170,11 @@ module systolic(
                 end
                 next_state=LOAD;
                 done_matrix_mult=0;
+
             end
             
-            LOAD:
+            LOAD:begin
+
                 for(int x=0;x<4;x++)begin
                     en_fr[x]=1'b0;
                     en_fc[x]=1'b0;
@@ -179,7 +185,10 @@ module systolic(
                 next_state = PROCESSING;
                 done_matrix_mult=0;
 
+            end
+
             PROCESSING:begin
+
                 if(valid_out_flag)
                     begin
                         done_matrix_mult=1;
@@ -198,8 +207,9 @@ module systolic(
                         done_matrix_mult=0;
                     end
                     end
-
+            
                 else 
+
                     begin
                         for(int x=0;x<4;x++)begin
                             en_fr[x]=1'b0;
@@ -212,6 +222,8 @@ module systolic(
                             done_matrix_mult=0;
                     end    
                 
+            end
+
             DONE:begin
                 for(int x=0;x<4;x++)begin
                     en_fr[x]=1'b0;
