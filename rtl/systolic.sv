@@ -7,7 +7,7 @@ enum logic [1:0] {
     LOAD,
     PROCESSING,
     DONE
-} state;
+} state_type;
 
 module systolic(
     input logic clk,
@@ -28,7 +28,7 @@ module systolic(
     logic done [0:3][0:3];
     logic valid_out [0:3][0:3];
 
-
+    state_type state, next_state;
 
     //decoding input matrices
     assign A_r[0]= {matrix_A[127:96],24'b0};
@@ -69,6 +69,7 @@ module systolic(
     //systolic array
     logic [7:0] A_bus [0:3][0:4];  // [row][col] — extra col for left injection
     logic [7:0] B_bus [0:4][0:3];  // [row][col] — extra row for top injection
+    logic valid[0:3][0:3];
 
     always_comb begin
     for (int i = 0; i < 4; i++) begin
@@ -88,6 +89,7 @@ module systolic(
         PE PEij (
             .clk(clk),
             .reset(reset),
+            .valid(valid[i][j]),
             .A_in(A_bus[i][j]),
             .B_in(B_bus[i][j]),
             .A_out(A_bus[i][j+1]),   // pass A right
@@ -107,11 +109,134 @@ module systolic(
         C_bus[3][0], C_bus[3][1], C_bus[3][2], C_bus[3][3]
     };
 
-    assign done_matrix_mult = valid_out[0][0] & valid_out[0][1] & valid_out[0][2] & valid_out[0][3] &
-                              valid_out[1][0] & valid_out[1][1] & valid_out[1][2] & valid_out[1][3] &
-                              valid_out[2][0] & valid_out[2][1] & valid_out[2][2] & valid_out[2][3] &
-                              valid_out[3][0] & valid_out[3][1] & valid_out[3][2] & valid_out[3][3];
 
+    //state register
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) begin
+            state <= IDLE;
+        end else begin
+            state <= next_state;
+        end
+    end
+    logic valid_out_flag;
+    logic done_flag;
+    //next state and output logic
+    always_comb begin
 
+        valid_out_flag = valid_out[0][0] && valid_out[0][1] && valid_out[0][2] && valid_out[0][3] &&
+                    valid_out[1][0] && valid_out[1][1] && valid_out[1][2] && valid_out[1][3] &&
+                    valid_out[2][0] && valid_out[2][1] && valid_out[2][2] && valid_out[2][3] &&
+                    valid_out[3][0] && valid_out[3][1] && valid_out[3][2] && valid_out[3][3];
+        done_flag = done[0][0] && done[0][1] && done[0][2] && done[0][3] &&
+                    done[1][0] && done[1][1] && done[1][2] && done[1][3] &&
+                    done[2][0] && done[2][1] && done[2][2] && done[2][3] &&
+                    done[3][0] && done[3][1] && done[3][2] && done[3][3];
+                    
+        case(state)
+            
+            IDLE:begin
+                
+                for(int x=0;x<4;x++)begin
+                    en_fr[x]=1'b0;
+                    en_fc[x]=1'b0;
+                    for(int y=0;y<4;y++)begin
+                        valid[x][y]=1'b0;
+                    end
+                end
+
+                if(valid_in)begin
+                    next_state = FEED;
+                    done_matrix_mult=0;
+                end
+                
+                else begin  
+                    next_state = IDLE;
+                    done_matrix_mult=0;
+                end
+            
+            end
+            
+            FEED:begin
+                for(int x=0;x<4;x++)begin
+                    en_fr[x]=1'b0;
+                    en_fc[x]=1'b0;
+                    for(int y=0;y<4;y++)begin
+                        valid[x][y]=1'b1;
+                    end
+                end
+                next_state=LOAD;
+                done_matrix_mult=0;
+            end
+            
+            LOAD:
+                for(int x=0;x<4;x++)begin
+                    en_fr[x]=1'b0;
+                    en_fc[x]=1'b0;
+                    for(int y=0;y<4;y++)begin
+                        valid[x][y]=1'b0;
+                    end
+                end
+                next_state = PROCESSING;
+                done_matrix_mult=0;
+
+            PROCESSING:begin
+                if(valid_out_flag)
+                    begin
+                        done_matrix_mult=1;
+                        next_state=DONE;
+                    end
+
+                else if (~(valid_out_flag)&&(done_flag))
+                    begin
+                        for(int x=0;x<4;x++)begin
+                            en_fr[x]=1'b1;
+                            en_fc[x]=1'b1;
+                            for(int y=0;y<4;y++)begin
+                                valid[x][y]=1'b0;
+                            end
+                        next_state = FEED;
+                        done_matrix_mult=0;
+                    end
+                    end
+
+                else 
+                    begin
+                        for(int x=0;x<4;x++)begin
+                            en_fr[x]=1'b0;
+                            en_fc[x]=1'b0;
+                            for(int y=0;y<4;y++)begin
+                                valid[x][y]=1'b0;
+                            end
+                        end
+                            next_state=PROCESSING;
+                            done_matrix_mult=0;
+                    end    
+                
+            DONE:begin
+                for(int x=0;x<4;x++)begin
+                    en_fr[x]=1'b0;
+                    en_fc[x]=1'b0;
+                    for(int y=0;y<4;y++)begin
+                        valid[x][y]=1'b0;
+                    end
+                end
+                if(reset)begin
+                    next_state=IDLE;
+                    done_matrix_mult=0;
+                end
+                else begin
+                    done_matrix_mult=1;
+                    next_state=DONE;
+                end
+            end
+
+            default: begin
+                next_state = IDLE;
+                done_matrix_mult = 0;
+            end
+
+    endcase
+    
+    end
 
 endmodule
