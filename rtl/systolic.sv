@@ -44,7 +44,7 @@ module systolic(
 
     generate
         genvar i;
-        for (i = 0; i < 4; i++) begin : gen_A_rows
+        for (i = 0; i < 4; i=i+1) begin : gen_A_rows
             data_feeder fri (
                 .clk(clk),
                 .data_in (A_r[i]),
@@ -54,7 +54,7 @@ module systolic(
             );
         end
 
-        for (i = 0; i < 4; i++) begin : gen_B_cols
+        for (i = 0; i < 4; i=i+1) begin : gen_B_cols
             data_feeder fci (
                 .clk(clk),
                 .data_in (B_c[i]),
@@ -79,12 +79,12 @@ module systolic(
     end
     end
 
-    logic [32:0] C_bus [0:3][0:3];  // PE partial sums, or whatever size you want
+    logic [31:0] C_bus [0:3][0:3];  // PE partial sums, or whatever size you want
 
     generate
     genvar m, n;
-    for (m = 0; m < 4; m++) begin : ROW
-        for (n = 0; n < 4; n++) begin : COL
+    for (m = 0; m < 4; m=m+1) begin : ROW
+        for (n = 0; n < 4; n=n+1) begin : COL
         pe PEij (
             .clk(clk),
             .reset(reset),
@@ -101,7 +101,7 @@ module systolic(
     end
     endgenerate
 
-    assign y_out = {
+    assign y = {
         C_bus[0][0], C_bus[0][1], C_bus[0][2], C_bus[0][3],
         C_bus[1][0], C_bus[1][1], C_bus[1][2], C_bus[1][3],
         C_bus[2][0], C_bus[2][1], C_bus[2][2], C_bus[2][3],
@@ -121,7 +121,18 @@ module systolic(
     //flags
     logic valid_out_flag;
     logic done_flag;
+    logic latched_valid_out_flag;
     
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset) begin
+            latched_valid_out_flag <= 1'b0;
+        end else if (valid_out_flag) begin
+            latched_valid_out_flag <= 1'b1;
+        end else if (state == DONE) begin
+            latched_valid_out_flag <= 1'b0;
+        end
+    end
+
     //next state and output logic
     always_comb begin
 
@@ -188,7 +199,7 @@ module systolic(
 
             PROCESSING:begin
 
-                if(valid_out_flag)
+                if(latched_valid_out_flag)
                     begin
                         done_matrix_mult=1;
                         next_state=DONE;
