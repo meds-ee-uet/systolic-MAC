@@ -108,6 +108,7 @@ module mac_unit (
                 done = 1;
                 next_state = IDLE;
             end
+            default: next_state=IDLE;
         endcase
     end
 

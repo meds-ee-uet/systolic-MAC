@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 
-enum logic [1:0] {
+typedef enum logic [2:0] {
     IDLE,
     FEED,
     LOAD,
@@ -16,7 +16,6 @@ module systolic(
     input logic [127:0] matrix_A,
     input logic [127:0] matrix_B,
     output logic [511:0] y,
-    output logic done,
     output logic done_matrix_mult
 );
     logic [55:0] A_r [4];
@@ -42,9 +41,9 @@ module systolic(
     assign B_c[3]= {24'b0,matrix_B[103:96], matrix_B[71:64], matrix_B[39:32], matrix_B[7:0]};
     
     // Instantiate data feeders for each row of A and column of B
-    genvar i;
 
     generate
+        genvar i;
         for (i = 0; i < 4; i++) begin : gen_A_rows
             data_feeder fri (
                 .clk(clk),
@@ -82,21 +81,21 @@ module systolic(
 
     logic [32:0] C_bus [0:3][0:3];  // PE partial sums, or whatever size you want
 
-    genvar m, n;
     generate
+    genvar m, n;
     for (m = 0; m < 4; m++) begin : ROW
         for (n = 0; n < 4; n++) begin : COL
         PE PEij (
             .clk(clk),
             .reset(reset),
-            .valid(valid[i][j]),
-            .A_in(A_bus[i][j]),
-            .B_in(B_bus[i][j]),
-            .A_out(A_bus[i][j+1]),   // pass A right
-            .B_out(B_bus[i+1][j]),   // pass B down
-            .y_out(C_bus[i][j]),
-            .done(done[i][j]),
-            .valid_out(valid_out[i][j])
+            .valid(valid[m][n]),
+            .A_in(A_bus[m][n]),
+            .B_in(B_bus[m][n]),
+            .A_out(A_bus[m][n+1]),   // pass A right
+            .B_out(B_bus[m+1][n]),   // pass B down
+            .y_out(C_bus[m][n]),
+            .done(done[m][n]),
+            .valid_out(valid_out[m][n])
         );
         end
     end
