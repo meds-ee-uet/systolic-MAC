@@ -1,3 +1,18 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description:
+// This SystemVerilog testbench verifies a counter module by applying sequences of 7 one-cycle done pulses by 2 ways(both are working).
+// First using a loop of pulse_done() calls, then with pulse_done() followed by @(posedge clk) and checks if en_y asserts correctly in both methods.
+// It includes GTKWave dumping.
+// 
+// Author:
+// Muhammad Waleed Akram (2023-EE-165)
+// 
+// Date:
+
+
 `timescale 1ns/1ps
 module counter_tb;
 

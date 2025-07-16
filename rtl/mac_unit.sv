@@ -1,3 +1,17 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description: 
+// This module implements a Multiply-Accumulate (MAC) unit . Takes A and B as inputs (each of 8bits) multiply them and then accumulates the 
+// result in a 32-bit accumulator.4 states required for it and we used Moore FSM to implement it which has already been added in the docs.
+//
+// Author:
+// Muhammad Waleed Akram (2023-EE-165)
+// Abdul Muiz (2023-EE-162)
+//
+// Date:
+
 `timescale 1ns/1ps
 
 //8 bit signed multiplier, with 16 bit intermediate, with 32 bit accumulator

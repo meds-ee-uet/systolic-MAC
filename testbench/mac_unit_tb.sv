@@ -1,3 +1,17 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description:
+// This SystemVerilog testbench verifies a Multiply-Accumulate (MAC) unit by feeding it a series of 7 signed 8-bit input pairs and observing the cumulative 32-bit output after
+// each operation. It uses a done signal for synchronization and generates waveform output for GTKWave analysis.
+//
+// Author:
+// Muhammad Waleed Akram (2023-EE-165)
+//
+// Date:
+
+
 `timescale 1ns/1ps
 
 module mac_unit_tb;
