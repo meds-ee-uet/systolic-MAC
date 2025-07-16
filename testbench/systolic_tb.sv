@@ -1,3 +1,17 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description:
+//  This SystemVerilog testbench verifies a 4×4 systolic array multiplier by applying two test cases.Firstly with all positive 8-bit integers and 
+// Secondly with signed values and successfully  checks 16 32-bit output results. It uses valid_in and done_matrix_mult for control and 
+// extracts outputs from a 512-bit wide bus y
+// 
+// Author:
+// Muhammad Waleed Akram (2023-EE-165)
+// 
+// Date:
+
 `timescale 1ns/1ps
 
 module systolic_tb;
