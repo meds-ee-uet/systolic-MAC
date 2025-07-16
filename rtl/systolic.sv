@@ -31,8 +31,8 @@ module systolic(
     logic [55:0] B_c [4];
     logic en_fr [4];
     logic en_fc [4];
-    logic [7:0] A_r_out [4];
-    logic [7:0] B_c_out [4];
+    logic signed [7:0] A_r_out [4];
+    logic signed [7:0] B_c_out [4];
     logic done [0:3][0:3];
     logic valid_out [0:3][0:3];
 
@@ -75,8 +75,8 @@ module systolic(
     endgenerate
 
     //systolic array
-    logic [7:0] A_bus [0:3][0:4];  // [row][col] — extra col for left injection
-    logic [7:0] B_bus [0:4][0:3];  // [row][col] — extra row for top injection
+    logic signed [7:0] A_bus [0:3][0:4];  // [row][col] — extra col for left injection
+    logic signed [7:0] B_bus [0:4][0:3];  // [row][col] — extra row for top injection
     logic valid[0:3][0:3];
 
     always_comb begin
@@ -88,7 +88,7 @@ module systolic(
     end
     end
 
-    logic [31:0] C_bus [0:3][0:3];  // PE partial sums, or whatever size you want
+    logic signed [31:0] C_bus [0:3][0:3];  // PE partial sums, or whatever size you want
 
     generate
     genvar m, n;

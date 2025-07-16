@@ -64,7 +64,9 @@ module systolic_tb;
 
         $display("Matrix multiplication done.");
         $display("Raw hex y = %h", y);
-
+        #30;reset <= 1;
+        @(posedge clk);
+        reset <= 0;
         // Unpack y into 16 partial sums (32 bits each)
         for (int i = 0; i < 16; i++) begin
             $display("y[%0d] = %0d", i, y[511 - i*32 -: 32]);
@@ -102,7 +104,7 @@ module systolic_tb;
 
         // Unpack y into 16 partial sums (32 bits each)
         for (int i = 0; i < 16; i++) begin
-            $display("y[%0d] = %0d", i, y[511 - i*32 -: 32]);
+            $display("y[%0d] = %0d", i, $signed(y[511 - i*32 -: 32]));
         end
 
 

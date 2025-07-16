@@ -13,7 +13,7 @@ module data_feeder(
     input  logic [55:0] data_in,   // 7 × 8 bits
     input  logic        enable,
     input  logic        reset,
-    output logic [7:0]  data_out
+    output logic signed [7:0]  data_out
 );
 
     logic [55:0] shift_reg;
