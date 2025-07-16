@@ -1,3 +1,12 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description:
+// Counter that keeps count of the done signals from a mac-unit
+// Author: Abdul Muiz(2023-EE-162)
+// Date:
+
 module counter(
     input logic clk,
     input logic reset,

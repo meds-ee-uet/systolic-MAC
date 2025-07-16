@@ -1,3 +1,12 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description:
+// A data feeder that takes in 56 bit input and gives out 8 bit output with each enable received
+// Author:Abdul Muiz(2023-EE-162)
+// Date:
+
 `timescale 1ns/1ps
 module data_feeder(
     input  logic        clk, 
