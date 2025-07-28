@@ -4,7 +4,9 @@
 //
 // Description:
 // A data feeder that takes in 56 bit input and gives out 8 bit output with each enable received
-// Author:Abdul Muiz(2023-EE-162)
+//
+// Authors: Abdul Muiz(2023-EE-162) & Muhammad Waleed Akram (2023-EE-165)
+//
 // Date:
 
 `timescale 1ns/1ps

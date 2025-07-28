@@ -4,7 +4,9 @@
 //
 // Description:
 // The top module for the 4x4 systolic array. 5 state mealy FSM has been implemented for it. It is to compute 4x4 matrix-multiplication.
-// Author: Abdul Muiz(2023-EE-162)
+//
+// Authors: Abdul Muiz(2023-EE-162) & Muhammad Waleed Akram (2023-EE-165)
+//
 // Date: 
 
 `timescale 1ns/1ps

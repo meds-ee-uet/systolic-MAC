@@ -3,11 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 // Description:
-// This SystemVerilog testbench verifies a `data_feeder` module by feeding two 56-bit bursts using a reset pulse to load data, 
+// This SystemVerilog testbench verifies a "data_feeder" module by feeding two 56-bit bursts using a reset pulse to load data, 
 // then sequentially enabling output shifts across 7 clock cycles. Each byte(8bit) is displayed after every second clock for clarity using a reusable `shift_7_bytes()` task.
 // 
 // Author:
-// Muhammad Waleed Akram (2023-EE-165)
+// Muhammad Waleed Akram (2023-EE-165) & Abdul Muiz (2023-EE-162)
 // 
 // Date:
 

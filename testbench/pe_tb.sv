@@ -8,7 +8,7 @@
 // uses arrays to manage input data sequences cleanly.
 // 
 // Author:
-// Muhammad Waleed Akram (2023-EE-165)
+// Muhammad Waleed Akram (2023-EE-165) & Abdul Muiz (2023-EE-162)
 // 
 // Date:
 

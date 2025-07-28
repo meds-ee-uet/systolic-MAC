@@ -4,7 +4,9 @@
 //
 // Description:
 // Parameterized register with a synchronous reset
-// Author: Abdul Muiz(2023-EE-162)
+//
+// Authors: Abdul Muiz(2023-EE-162) & Muhammad Waleed Akram (2023-EE-165)
+//
 // Date: 
 
 module reg_def #(
