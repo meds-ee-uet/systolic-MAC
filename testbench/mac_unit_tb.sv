@@ -7,7 +7,7 @@
 // each operation. It uses a done signal for synchronization and generates waveform output for GTKWave analysis.
 //
 // Author:
-// Muhammad Waleed Akram (2023-EE-165)
+// Muhammad Waleed Akram (2023-EE-165) & Abdul Muiz (2023-EE-162)
 //
 // Date:
 

@@ -1,3 +1,18 @@
+// Copyright 2025 Maktab-e-Digital Systems Lahore.
+// Licensed under the Apache License, Version 2.0, see LICENSE file for details.
+// SPDX-License-Identifier: Apache-2.0
+//
+// Description:
+// This SystemVerilog testbench verifies a "pe" (Processing Element) module by feeding it 7 signed input pairs with a "valid" handshake,
+// and waits for a `done` signal to log outputs including `y_out`, `A_out`, `B_out`, and `valid_out`. It includes waveform dumping and 
+// uses arrays to manage input data sequences cleanly.
+// 
+// Author:
+// Muhammad Waleed Akram (2023-EE-165) & Abdul Muiz (2023-EE-162)
+// 
+// Date:
+
+
 `timescale 1ns/1ps
 
 module pe_tb;

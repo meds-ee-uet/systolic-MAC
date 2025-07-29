@@ -4,7 +4,9 @@
 //
 // Description:
 // Processing element that does MAC operation and passes on the values to the adjacent row/column
-// Author: Abdul Muiz(2023-EE-162)
+//
+// Authors: Abdul Muiz(2023-EE-162) & Muhammad Waleed Akram (2023-EE-165)
+//
 // Date:
 
 `timescale 1ns/1ps

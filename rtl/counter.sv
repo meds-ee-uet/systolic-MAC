@@ -4,7 +4,9 @@
 //
 // Description:
 // Counter that keeps count of the done signals from a mac-unit
-// Author: Abdul Muiz(2023-EE-162)
+//
+// Authors: Abdul Muiz(2023-EE-162) & Muhammad Waleed Akram (2023-EE-165)
+// 
 // Date:
 
 module counter(

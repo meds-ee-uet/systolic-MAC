@@ -8,7 +8,7 @@
 // It includes GTKWave dumping.
 // 
 // Author:
-// Muhammad Waleed Akram (2023-EE-165)
+// Muhammad Waleed Akram (2023-EE-165) & Abdul Muiz (2023-EE-162)
 // 
 // Date:
 
@@ -19,7 +19,7 @@ module counter_tb;
 
   // DUT signals
   logic clk = 0;
-  logic rst = 1;      // start in reset
+  logic rst = 1;      
   logic done = 0;
   logic en_y;
 
