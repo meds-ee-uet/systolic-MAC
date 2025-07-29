@@ -56,6 +56,8 @@ module systolic_tb;
         @(posedge clk);
         reset <= 0;
 
+        repeat(3)@(posedge clk);
+
         valid_in <= 1;
         @(posedge clk);
         valid_in <= 0;
@@ -93,6 +95,9 @@ module systolic_tb;
         @(posedge clk);
         reset <= 0;
 
+        repeat(3)@(posedge clk);
+
+
         valid_in <= 1;
         @(posedge clk);
         valid_in <= 0;
@@ -107,7 +112,7 @@ module systolic_tb;
             $display("y[%0d] = %0d", i, $signed(y[511 - i*32 -: 32]));
         end
 
-
+        #100;
 
         $finish;
     end

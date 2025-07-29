@@ -13,15 +13,20 @@ module data_feeder(
     input  logic [55:0] data_in,   // 7 × 8 bits
     input  logic        enable,
     input  logic        reset,
+    input logic load,
     output logic signed [7:0]  data_out
 );
 
     logic [55:0] shift_reg;
 
-    always_ff @(posedge clk or posedge reset) begin
+    always_ff @(posedge clk or posedge reset or posedge load) begin
         if (reset) begin
-            shift_reg <= data_in;  // Load all 56 bits
-        end else if (enable) begin
+            shift_reg <= 0; 
+        end
+        else if(load) begin
+            shift_reg <= data_in; // Load all 56 bits
+        end
+        else if (enable) begin
             shift_reg <= shift_reg << 8;  // Shift left by 8 bits each enable
         end
     end
