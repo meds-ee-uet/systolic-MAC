@@ -37,6 +37,7 @@ module tb_rv_protocol;
         reset = 1;
         valid = 0;
         ready = 0;
+        en_data_Tx = 0;
         data_in = 64'h0;
 
         wait_cycle;
