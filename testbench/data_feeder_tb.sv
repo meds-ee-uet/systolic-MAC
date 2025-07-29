@@ -4,7 +4,7 @@
 //
 // Description:
 // This SystemVerilog testbench verifies the updated "data_feeder" module that loads a 56-bit word using `load`,
-// and shifts 8 bits per `enable`. The reusable task `shift_7_bytes()` is used for testing.
+// and shifts 8 bits per `shift`. The reusable task `shift_7_bytes()` is used for testing.
 //
 // Authors:
 // Muhammad Waleed Akram (2023-EE-165) & Abdul Muiz (2023-EE-162)
@@ -18,7 +18,7 @@ module data_feeder_tb;
   logic [55:0] data_to_be_fed;
   logic clk = 0;
   logic reset = 0;
-  logic enable = 0;
+  logic shift = 0;
   logic load = 0;
   logic [55:0] data_in;
   logic signed [7:0] data_out;
@@ -30,18 +30,18 @@ module data_feeder_tb;
   data_feeder DUT (
     .clk(clk),
     .data_in(data_in),
-    .enable(enable),
+    .shift(shift),
     .reset(reset),
     .load(load),
     .data_out(data_out)
   );
 
-  // Task to shift 7 bytes (1 per enable)
+  // Task to shift 7 bytes (1 per shift)
   task automatic shift_7_bytes();
     for (int i = 0; i < 7; i++) begin
-      enable <= 1;
+      shift <= 1;
       @(posedge clk);
-      enable <= 0;
+      shift <= 0;
       $display("Time %0t | Byte %0d: data_out = 0x%0h", $time, i+1, data_out);
       @(posedge clk);  // for readability
     end
