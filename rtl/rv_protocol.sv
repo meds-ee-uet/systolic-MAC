@@ -11,7 +11,7 @@
 // Date:
 
 
-module ready_valid_interface (
+module rv_protocol (
     input  logic         clk,
     input  logic         reset,
     input  logic         valid,
