@@ -94,7 +94,7 @@ module systolic(
     end
     end
 
-    logic signed [31:0] C_bus [0:3][0:3];  // PE partial sums, or whatever size you want
+    logic signed [31:0] y_o [0:3][0:3];  // PE partial sums, or whatever size you want
 
     generate
     genvar m, n;
@@ -108,7 +108,7 @@ module systolic(
             .B_in(B_bus[m][n]),
             .A_out(A_bus[m][n+1]),   // pass A right
             .B_out(B_bus[m+1][n]),   // pass B down
-            .y_out(C_bus[m][n]),
+            .y_out(y_o[m][n]),
             .done(done[m][n]),
             .valid_out(valid_out[m][n])
         );
@@ -117,10 +117,10 @@ module systolic(
     endgenerate
 
     assign y = {
-        C_bus[0][0], C_bus[0][1], C_bus[0][2], C_bus[0][3],
-        C_bus[1][0], C_bus[1][1], C_bus[1][2], C_bus[1][3],
-        C_bus[2][0], C_bus[2][1], C_bus[2][2], C_bus[2][3],
-        C_bus[3][0], C_bus[3][1], C_bus[3][2], C_bus[3][3]
+        y_o[0][0], y_o[0][1], y_o[0][2], y_o[0][3],
+        y_o[1][0], y_o[1][1], y_o[1][2], y_o[1][3],
+        y_o[2][0], y_o[2][1], y_o[2][2], y_o[2][3],
+        y_o[3][0], y_o[3][1], y_o[3][2], y_o[3][3]
     };
 
 
