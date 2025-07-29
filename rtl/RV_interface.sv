@@ -30,10 +30,13 @@ module ready_valid_interface (
     state_t state, next_state;
 
     // Register for data_out
-    logic [63:0] data_reg;
-
-    // Output assignments
-    assign data_out = data_reg;
+    reg_def #(.WIDTH(64)) rv_reg(
+        .x(data_in),
+        .enable(en_data_Tx),
+        .clk(clk),
+        .clear(reset),
+        .y(data_out)
+    );
 
     // FSM: State Register
     always_ff @(posedge clk or posedge reset) begin
@@ -45,9 +48,6 @@ module ready_valid_interface (
 
     // FSM: Next State Logic
     always_comb begin
-        next_state = state;
-        en_data_Tx = 1'b0;
-
         case (state)
             IDLE: begin
                 if (valid && ready) begin
@@ -61,15 +61,13 @@ module ready_valid_interface (
             end
 
             TRANSFERRING: begin
+                en_data_Tx = 1'b0;
                 next_state = IDLE;  // Single cycle transfer
             end
+            default:begin
+                next_state=IDLE;
+            end
         endcase
-    end
-
-    // Data transfer logic
-    always_ff @(posedge clk) begin
-        if (valid && ready && state == IDLE)
-            data_reg <= data_in;
     end
 
 endmodule
