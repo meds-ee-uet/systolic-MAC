@@ -10,13 +10,13 @@
 // Date:
 
 `timescale 1ns/1ps
-module data_feeder(
+module data_feeder#(parameter int in_width=56,parameter int out_width=8)(
     input  logic        clk, 
-    input  logic [55:0] data_in,   // 7 × 8 bits
+    input  logic [in_width-1:0] data_in,   // 7 × 8 bits
     input  logic        enable,
     input  logic        reset,
     input logic load,
-    output logic signed [7:0]  data_out
+    output logic signed [out_width-1:0]  data_out
 );
 
     logic [55:0] shift_reg;
@@ -33,6 +33,6 @@ module data_feeder(
         end
     end
 
-    assign data_out = shift_reg[55:48];  // Always output highest 8 bits
+    assign data_out = shift_reg[in_width-1-:out_width];  // Always output highest 8 bits
 
 endmodule
