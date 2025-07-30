@@ -18,7 +18,8 @@ module rv_protocol (
     input  logic         ready,
     input  logic [63:0]  data_in,
     output logic [63:0]  data_out,
-    output logic         en_data_Tx
+    output logic         en_data_Tx,
+    output logic         tx_done
 );
 
     // FSM state encoding
@@ -55,20 +56,33 @@ module rv_protocol (
                     next_state = TRANSFERRING;
                 end 
                 else begin
+                    en_data_Tx = 1'b0;
                     next_state = IDLE;
                 end
-            
             end
 
             TRANSFERRING: begin
                 en_data_Tx = 1'b0;
                 next_state = IDLE;  // Single cycle transfer
             end
-            default:begin
-                next_state=IDLE;
+            default: begin
+                en_data_Tx = 1'b0;
+                next_state = IDLE;
             end
         endcase
     end
 
-endmodule
+    // Mux and Delay Register for tx_done
+    logic mux_out;
 
+    assign mux_out = (en_data_Tx) ? 1'b1 : 1'b0;
+
+    reg_def #(.WIDTH(1)) delay_reg_tx_done (
+        .x(mux_out),
+        .enable(1'b1),
+        .clk(clk),
+        .clear(reset),
+        .y(tx_done)
+    );
+
+endmodule
