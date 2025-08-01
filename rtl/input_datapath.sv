@@ -1,0 +1,133 @@
+module counter_controlled (
+    input  logic clk,
+    input  logic rst,             // Active-high, posedge reset
+    input  logic enable,          // Enable signal
+    output logic count_done
+    output logic [1:0] count;
+);
+
+    logic increment_allowed; // Flag to allow incrementing the count
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            count <= 0;
+            increment_allowed <= 0;
+            count_done <= 0;
+        end else begin
+            count_done <= 0; // Default: no done signal
+
+            if (enable) begin
+                if (!increment_allowed) begin
+                    // First enable: only allow increment from next cycle
+                    increment_allowed <= 1;
+                end else begin
+                    if (count < 4) begin
+                        count <= count + 1;
+                        if (count + 1 == 4) begin
+                            count_done <= 1;
+                            count <= 0;                // Reset counter
+                            increment_allowed <= 0;    // Reset increment allowed
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+endmodule
+module input_datapath(
+    input logic clk,
+    input logic reset,
+    input logic [63:0] data_in,
+    input logic source_valid,
+    input logic dest_ready,
+    input logic next_row,
+    input logic next_col,
+    input logic [2:0] en,
+    output logic [55:0] data_out[2:0],
+    output logic load_done,
+    output logic tx_one_done,
+    output logic [55:0]B_c1,
+    output logic [55:0]B_c2,
+    output logic [55:0]B_c3,
+    output logic [55:0]B_c4,
+    output logic [55:0]A_r1,
+    output logic [55:0]A_r2,
+    output logic [55:0]A_r3,
+    output logic [55:0]A_r4
+);
+
+//  genvar 
+    logic [63:0] protocol_out;
+    logic row_done,col_done;
+    logic [1:0] row_count, col_count;
+    logic [55:0] reg_A_r[3:0];
+    logic [55:0] reg_B_c[3:0];
+
+
+    rv_protocol rv_one (
+        .clk(clk),
+        .reset(reset),
+        .valid(source_valid),
+        .ready(dest_ready),
+        .data_in(data_in),
+        .data_out(protocol_out),
+        .tx_done(tx_one_done)
+    );
+
+    //manager circuit
+    counter_controlled row_counter (
+        .clk(clk),
+        .rst(reset),
+        .enable(next_row),
+        .count_done(row_done),
+        .count(row_count)
+    );
+    counter_controlled col_counter (
+        .clk(clk),
+        .rst(reset),r = 
+        .enable(next_col),
+        .count_done(col_done),
+        .count(col_count) 
+    );
+
+    assign load_done = row_done && col_done;
+
+    logic [55:0] row_data;
+    logic [55:0] col_data;
+
+    assign row_data = protocol_out[63:32];
+    assign col_data = protocol_out[31:0]; // adjust slice as needed
+
+    genvar i;
+    generate
+        for (i = 0; i < 4; i++) begin : A_row_regs
+            reg_def #(.WIDTH(32)) A_reg (
+                .x(row_data),
+                .enable(row_count == i),
+                .clk(clk),
+                .clear(reset),
+                .y(A_r[i])
+            );
+        end
+        for (i = 0; i < 4; i++) begin : B_col_regs
+            reg_def #(.WIDTH(32)) B_reg (
+                .x(col_data),
+                .enable(col_count == i),
+                .clk(clk),
+                .clear(reset),
+                .y(B_c[i])
+            );
+        end
+    endgenerate
+
+    assign A_r1 = {A_r[0],24'b0};
+    assign A_r2 = {8'b0,A_r[1],16'b0};
+    assign A_r3 = {16'b0,A_r[2],8'b0};
+    assign A_r4 = {24'b0,A_r[3]};
+
+    assign B_c1 = {B_c[0],24'b0};
+    assign B_c2 = {8'b0,B_c[1],16'b0};
+    assign B_c3 = {16'b0,B_c[2],8'b0};
+    assign B_c4 = {24'b0,B_c[3]};
+
+endmodule
