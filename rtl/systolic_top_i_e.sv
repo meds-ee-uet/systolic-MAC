@@ -45,7 +45,7 @@ module systolic_top (
     input  logic        done_matrix_mult, // for dest_valid (it goes to reg_def and then from ther we'll get dest_valid basically after one clk cycle)
     input  logic [511:0] systolic_output,
     output logic [63:0]  final_data_out,
-    output logidc      sh_count_done,
+    output logic      sh_count_done,
     output logic         tx_two_done
 );
 

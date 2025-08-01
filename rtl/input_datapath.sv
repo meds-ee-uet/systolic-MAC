@@ -2,8 +2,8 @@ module counter_controlled (
     input  logic clk,
     input  logic rst,             // Active-high, posedge reset
     input  logic enable,          // Enable signal
-    output logic count_done
-    output logic [1:0] count;
+    output logic count_done,
+    output logic [1:0] count
 );
 
     logic increment_allowed; // Flag to allow incrementing the count
@@ -42,7 +42,6 @@ module input_datapath(
     input logic dest_ready,
     input logic next_row,
     input logic next_col,
-    input logic [2:0] en,
     output logic [55:0] data_out[2:0],
     output logic load_done,
     output logic tx_one_done,
@@ -60,8 +59,8 @@ module input_datapath(
     logic [63:0] protocol_out;
     logic row_done,col_done;
     logic [1:0] row_count, col_count;
-    logic [55:0] reg_A_r[3:0];
-    logic [55:0] reg_B_c[3:0];
+    logic [55:0] A_r[3:0];
+    logic [55:0] B_c[3:0];
 
 
     rv_protocol rv_one (
@@ -84,7 +83,7 @@ module input_datapath(
     );
     counter_controlled col_counter (
         .clk(clk),
-        .rst(reset),r = 
+        .rst(reset),
         .enable(next_col),
         .count_done(col_done),
         .count(col_count) 
