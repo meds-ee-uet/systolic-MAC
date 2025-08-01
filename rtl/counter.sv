@@ -21,13 +21,13 @@ module counter(
         if (reset) begin
             count <= 4'b0;
         end else if (done) begin
-            if (count == 4'd14) begin
+            if (count == 4'd11) begin
                 count <= 4'b0;
             end else begin
                 count <= count + 4'b1;
             end
         end else begin
-            if (count == 4'd14) begin
+            if (count == 4'd11) begin
                 count <= 4'b0; // Reset count if it reaches 7
             end else begin
                 count <= count; // Maintain current count
@@ -39,7 +39,7 @@ module counter(
         if (reset) begin
             en_y = 1'b0; // Disable output when reset
         end else begin
-            en_y = (count == 4'd14) ? 1'b1 : 1'b0; // Enable when count reaches 7
+            en_y = (count == 4'd11) ? 1'b1 : 1'b0; // Enable when count reaches 7
         end
     end
 
