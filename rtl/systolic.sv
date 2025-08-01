@@ -15,7 +15,6 @@
 typedef enum logic [2:0] {
     IDLE,
     FEED,
-    LOAD,
     PROCESSING,
     DONE
 } state_type;
@@ -190,22 +189,6 @@ module systolic(
                     end
                 end
                 next_state=PROCESSING;
-                done_matrix_mult=0;
-
-            end
-            
-            LOAD:begin
-
-                for(int x=0;x<4;x++)begin
-                    sh_fr[x]=1'b0;
-                    sh_fc[x]=1'b0;
-                    load_fr[x]=1'b0;
-                    load_fc[x]=1'b0;
-                    for(int y=0;y<4;y++)begin
-                        valid[x][y]=1'b0;
-                    end
-                end
-                next_state = PROCESSING;
                 done_matrix_mult=0;
 
             end

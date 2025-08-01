@@ -18,10 +18,9 @@ module rv_protocol (
     input  logic         ready,
     input  logic [63:0]  data_in,
     output logic [63:0]  data_out,
-    output logic         en_data_Tx,
     output logic         tx_done
 );
-
+    logic  en_data_Tx;
     // FSM state encoding
     typedef enum logic [1:0] {
         IDLE,

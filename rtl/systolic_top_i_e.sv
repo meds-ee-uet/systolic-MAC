@@ -5,7 +5,7 @@ module counter_controlled (
     output logic count_done
 );
 
-    logic [1:0] count;
+    logic [2:0] count;
     logic increment_allowed; // Flag to allow incrementing the count
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -20,9 +20,9 @@ module counter_controlled (
                     // First enable: only allow increment from next cycle
                     increment_allowed <= 1;
                 end else begin
-                    if (count < 3) begin
+                    if (count < 7) begin
                         count <= count + 1;
-                        if (count + 1 == 3) begin
+                        if (count + 1 == 7) begin
                             count_done <= 1;
                             count <= 0;                // Reset counter
                             increment_allowed <= 0;    // Reset increment allowed
@@ -91,7 +91,6 @@ module systolic_top (
         .ready(src_ready),
         .data_in(feeder_to_rv),
         .data_out(final_data_out),
-        .en_data_Tx(en_data_Tx),
         .tx_done(tx_two_done)
     );
 
