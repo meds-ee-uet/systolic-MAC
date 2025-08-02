@@ -44,6 +44,7 @@ module systolic_top (
     input  logic        src_ready,
     input  logic        done_matrix_mult, // for dest_valid (it goes to reg_def and then from ther we'll get dest_valid basically after one clk cycle)
     input  logic [511:0] systolic_output,
+    input   logic         dest_valid; 
     output logic [63:0]  final_data_out,
     output logic      sh_count_done,
     output logic         tx_two_done
@@ -53,7 +54,6 @@ module systolic_top (
     logic [511:0] buffer_to_feeder;
     logic [63:0]  feeder_to_rv;
     logic         en_data_Tx;
-    logic         dest_valid; //
 
     // Buffer Register: 512-bit
     reg_def #(.WIDTH(512)) buffer (

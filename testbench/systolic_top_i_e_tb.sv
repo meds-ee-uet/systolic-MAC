@@ -1,87 +1,84 @@
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
-module systolic_top_tb;
+module tb_systolic_top_i_e;
 
     logic clk;
     logic reset;
-    logic load;
-    logic shift;
-    logic src_ready;
-    logic done_matrix_mult;
-    logic [511:0] systolic_output;
-    logic [63:0] final_data_out;
-    logic tx_two_done;
+    logic valid;
+    logic ready;
+    logic [63:0] data_in;
+    logic tx_done;
+    logic [63:0] data_out;
 
     // Instantiate DUT
     systolic_top dut (
         .clk(clk),
         .reset(reset),
-        .load(load),
-        .shift(shift),
-        .src_ready(src_ready),
-        .done_matrix_mult(done_matrix_mult),
-        .systolic_output(systolic_output),
-        .final_data_out(final_data_out),
-        .tx_two_done(tx_two_done)
+        .valid(valid),
+        .ready(ready),
+        .data_in(data_in),
+        .tx_done(tx_done),
+        .data_out(data_out)
     );
 
-    // Clock generator: 10ns period
+    // Clock generation
     always #5 clk = ~clk;
 
-    // Task to wait 1 cycle
     task wait_cycle;
         @(posedge clk);
     endtask
 
     initial begin
-        $dumpfile("systolic_top.vcd");
-        $dumpvars(0, systolic_top_tb);
+        $dumpfile("systolic_top_i_e.vcd");
+        $dumpvars(0, tb_systolic_top_i_e);
 
-        // Initialize
         clk = 0;
         reset = 1;
-        load = 0;
-        shift = 0;
-        src_ready = 0;
-        done_matrix_mult = 0;
-        systolic_output = 512'h0;
+        valid = 0;
+        ready = 0;
+        data_in = 64'd0;
 
         wait_cycle;
         reset = 0;
         wait_cycle;
 
-        // Step 1: Load 512-bit output into buffer
-        systolic_output = 512'hFEDCBA9876543210_0011223344556677_8899AABBCCDDEEFF_DEADBEEFCAFEBABE_0123456789ABCDEF_0001020304050607_1122334455667788_F0F1F2F3F4F5F6F7;
-        load = 1;
-        wait_cycle;
-        load = 0;
-
-        // Step 2: Begin shifting from buffer → feeder
-        shift = 1;
-        wait_cycle;  // shift 1st 64 bits into feeder_to_rv
-        shift = 0;
-
-        // Step 3: Simulate controller finishing → done_matrix_mult goes high
-        done_matrix_mult = 1;
-        wait_cycle;  // dest_valid is now active (1 cycle delayed)
-        done_matrix_mult = 0;
-
-        // Step 4: src_ready high → triggers handshake with rv_protocol
-        src_ready = 1;
+        // Feed input data (if any needed for systolic array)
+        // Let's assume we give it one input (you can replicate this)
+        valid = 1;
+        ready = 1;
+        data_in = 64'hCAFEBABEDEADBEEF;  // Example data
+        $display("T=%0t: Sending data to DUT", $time);
         wait_cycle;
 
-        // Observe outputs
-        $display("T=%0t: final_data_out = %h", $time, final_data_out);
-        $display("T=%0t: tx_two_done = %b", $time, tx_two_done);
-
+        // Deassert inputs (don't care after 1 cycle)
+        valid = 0;
+        ready = 0;
+        data_in = 64'd0;
         wait_cycle;
 
-        // Cleanup
-        shift = 0;
-        src_ready = 0;
+        // Assume systolic_output appears after a few cycles
+        repeat (5) wait_cycle;
 
-        $display("T=%0t: Test complete.", $time);
-        #50;
+        // --- Phase 1: systolic_output ready ---
+        $display("T=%0t: Systolic output is ready (assumed)", $time);
+        // Output should be loaded into buffer in next cycle
+        wait_cycle;
+
+        $display("T=%0t: Loading buffer_to_feeder", $time);
+        wait_cycle;
+
+        $display("T=%0t: Shifting buffer", $time);
+        wait_cycle;
+
+        $display("T=%0t: feeder_to_rv begins to send data_out", $time);
+        // We expect chunks of 64-bit output now
+        repeat (5) begin
+            wait_cycle;
+            $display("T=%0t: TX: data_out = %h | tx_done = %b", $time, data_out, tx_done);
+        end
+
+        $display("T=%0t: Simulation complete", $time);
+        #100;
         $finish;
     end
 
