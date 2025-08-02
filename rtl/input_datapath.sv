@@ -38,7 +38,7 @@ module input_datapath(
     input logic clk,
     input logic reset,
     input logic [63:0] data_in,
-    input logic source_valid,
+    input logic src_valid,
     input logic dest_ready,
     input logic next_row,
     input logic next_col,
@@ -66,7 +66,7 @@ module input_datapath(
     rv_protocol rv_one (
         .clk(clk),
         .reset(reset),
-        .valid(source_valid),
+        .valid(src_valid),
         .ready(dest_ready),
         .data_in(data_in),
         .data_out(protocol_out),
