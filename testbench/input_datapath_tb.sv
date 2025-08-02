@@ -89,8 +89,8 @@ module input_datapath_tb;
     end
 
     // Wait for load_done signal
-    //wait (load_done == 1);
-    //$display("T=%0t: load_done = %b", $time, load_done);
+    wait (load_done == 1);
+    $display("T=%0t: load_done = %b", $time, load_done);
 
     // Display final outputs
     $display("A_r1 = %h", A_r1);
