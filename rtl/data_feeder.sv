@@ -19,7 +19,8 @@ module data_feeder#(parameter int in_width=56,parameter int out_width=8)(
     output logic signed [out_width-1:0]  data_out
 );
 
-    logic [55:0] shift_reg;
+    logic [in_width-1:0] shift_reg;
+
 
     always_ff @(posedge clk or posedge reset or posedge load) begin
         if (reset) begin
@@ -29,10 +30,10 @@ module data_feeder#(parameter int in_width=56,parameter int out_width=8)(
             shift_reg <= data_in; // Load all 56 bits
         end
         else if (shift) begin
-            shift_reg <= shift_reg << 8;  // Shift left by 8 bits each enable
+            shift_reg <= shift_reg << out_width;  // Shift left by 8 bits each enable
         end
     end
 
-    assign data_out = shift_reg[in_width-1-:out_width];  // Always output highest 8 bits
+    assign data_out = shift_reg[in_width-1 -: out_width]; 
 
 endmodule

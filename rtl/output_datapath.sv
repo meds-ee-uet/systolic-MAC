@@ -7,7 +7,7 @@ module counter_controlled (
 
     logic [2:0] count;
     logic increment_allowed; // Flag to allow incrementing the count
-    always_ff @(posedge clk or posedge rst) begin
+    always_ff @(posedge clk) begin
         if (rst) begin
             count <= 0;
             increment_allowed <= 0;
@@ -36,7 +36,7 @@ module counter_controlled (
 endmodule
 
 
-module systolic_top (
+module output_datapath (
     input  logic        clk,
     input  logic        reset,
     input  logic        load,
@@ -44,7 +44,7 @@ module systolic_top (
     input  logic        src_ready,
     input  logic        done_matrix_mult, // for dest_valid (it goes to reg_def and then from ther we'll get dest_valid basically after one clk cycle)
     input  logic [511:0] systolic_output,
-    input   logic         dest_valid; 
+    input   logic         dest_valid,
     output logic [63:0]  final_data_out,
     output logic      sh_count_done,
     output logic         tx_two_done
@@ -58,7 +58,7 @@ module systolic_top (
     // Buffer Register: 512-bit
     reg_def #(.WIDTH(512)) buffer (
         .x(systolic_output),
-        .enable(load),
+        .enable(1),
         .clk(clk),
         .clear(reset),
         .y(buffer_to_feeder)
@@ -72,7 +72,7 @@ module systolic_top (
         .clk(clk),
         .data_in(buffer_to_feeder),
         .shift(shift),
-        .reset(res_i_e),
+        .reset(reset),
         .load(load),
         .data_out(feeder_to_rv)
     );
@@ -93,5 +93,7 @@ module systolic_top (
         .data_out(final_data_out),
         .tx_done(tx_two_done)
     );
+
+    
 
 endmodule
