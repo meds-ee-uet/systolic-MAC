@@ -77,7 +77,7 @@ module input_datapath_tb;
     wait_cycle;
 
     // Trigger counters for 4 rows and 4 columns
-    repeat (4) begin
+    repeat (5) begin
       next_row = 1;
       next_col = 1;
       wait_cycle;
