@@ -13,6 +13,7 @@ module output_datapath_tb;
   logic [63:0] final_data_out;
   logic sh_count_done;
   logic tx_two_done;
+ // logic done_matrix_mult ;
 
   // Clock generation: 10ns period
   always #5 clk = ~clk;
@@ -24,6 +25,7 @@ module output_datapath_tb;
     .load(load),
     .shift(shift),
     .src_ready(src_ready),
+  //  .done_matrix_mult(done_matrix_mult),
     .systolic_output(systolic_output),
     .dest_valid(dest_valid),
     .final_data_out(final_data_out),
@@ -41,7 +43,7 @@ module output_datapath_tb;
 
   task load_data(input [511:0] data);
     systolic_output <= data;
-    repeat(2) @(posedge clk);
+    @(posedge clk);
     load <= 1;
     @(posedge clk);
     load <= 0;
@@ -89,17 +91,14 @@ module output_datapath_tb;
 
     $display("T=%0t: buffer_to_feeder = %h", $time, dut.buffer_to_feeder);
 
-    $monitor("T=%0t: feeder_to_rv = %h | count = %0d | count_done = %b | en_data_Tx = %b", 
+    $monitor("T=%0t: feeder_to_rv = %h | count = %0d | sh_count_done = %b | en_data_Tx = %b", 
               $time, dut.feeder_to_rv, dut.sh_counter_i_e.count, dut.sh_count_done, dut.rv_two.en_data_Tx);
 
     @(posedge clk); // Let load settle
-    @(posedge clk); // Wait one extra cycle so first output appears next cycle
-
+    @(posedge clk); // Wait one extra cycle so first output appears next cycle// 
     observe_64bit_block(0);
 
-    
-
-    for (int i = 1; i < 9; i++) begin
+    for (int i = 1; i < 8; i++) begin
       transfer_64bit_block(i);
     end
 
