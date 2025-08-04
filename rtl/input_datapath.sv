@@ -10,26 +10,18 @@ module counter_controlled (
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             count <= 0;
-            increment_allowed <= 0;
             count_done <= 0;
         end else begin
             count_done <= 0; // Default: no done signal
-
-            if (enable) begin
-                if (!increment_allowed) begin
-                    // First enable: only allow increment from next cycle
-                    increment_allowed <= 1;
-                end else begin
-                    if (count < 4) begin
-                        count <= count + 1;
-                        if (count + 1 == 4) begin
-                            count_done <= 1;
-                            count <= 0;                // Reset counter
-                            increment_allowed <= 0;    // Reset increment allowed
-                        end
-                    end
+        if (enable) begin
+            if (count < 4) begin
+                count <= count + 1;
+                if (count + 1 == 4) begin
+                    count_done <= 1;
+                    count <= 0;
                 end
             end
+        end
         end
     end
 
