@@ -43,12 +43,12 @@ module output_datapath (
     // Intermediate wires
     logic [511:0] buffer_to_feeder;
     logic [63:0]  feeder_to_rv;
-    logic         en_data_Tx;
+   
 
     // Buffer Register: 512-bit
     reg_def #(.WIDTH(512)) buffer (
         .x(systolic_output),
-        .enable(1),
+        .enable(1'b1),
         .clk(clk),
         .clear(reset),
         .y(buffer_to_feeder)
