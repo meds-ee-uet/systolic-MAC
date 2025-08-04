@@ -49,8 +49,8 @@ module input_datapath(
     logic [63:0] protocol_out;
     logic row_done,col_done;
     logic [1:0] row_count, col_count;
-    logic [55:0] A_r[3:0];
-    logic [55:0] B_c[3:0];
+    logic [31:0] A_r[3:0];
+    logic [31:0] B_c[3:0];
 
 
     rv_protocol rv_one (
@@ -81,8 +81,8 @@ module input_datapath(
 
     assign load_done = row_done && col_done;
 
-    logic [55:0] row_data;
-    logic [55:0] col_data;
+    logic [31:0] row_data;
+    logic [31:0] col_data;
 
     assign row_data = protocol_out[63:32];
     assign col_data = protocol_out[31:0]; // adjust slice as needed
