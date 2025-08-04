@@ -1,52 +1,42 @@
-module counter_controlled (
-    input  logic clk,
-    input  logic rst,             // Active-high, posedge reset
-    input  logic enable,          // Enable signal
-    output logic count_done
-);
+// module counter_controlled_output_datapath (
+//     input  logic clk,
+//     input  logic rst,             // Active-high, posedge reset
+//     input  logic enable,          // Enable signal
+//     output logic count_done
+// );
 
-    logic [2:0] count;
-    logic increment_allowed; // Flag to allow incrementing the count
-    always_ff @(posedge clk) begin
-        if (rst) begin
-            count <= 0;
-            increment_allowed <= 0;
-            count_done <= 0;
-        end else begin
-            count_done <= 0; // Default: no done signal
+//     logic [2:0] count;
+//     always_ff @(posedge clk or posedge rst) begin
+//         if (rst) begin
+//             count <= 0;
+//             count_done <= 0;
+//         end else begin
+//             count_done <= 0; // Default: no done signal
+//             if (enable) begin
+//                 if (count < 7) begin
+//                     count <= count + 1;
+//                     if (count + 1 == 7) begin
+//                         count_done <= 1;
+//                         count <= 0;                // Reset counter
+//                     end
+//                 end
+//             end
+//         end
+//     end
 
-            if (enable) begin
-                if (!increment_allowed) begin
-                    // First enable: only allow increment from next cycle
-                    increment_allowed <= 1;
-                end else begin
-                    if (count < 7) begin
-                        count <= count + 1;
-                        if (count + 1 == 7) begin
-                            count_done <= 1;
-                            count <= 0;                // Reset counter
-                            increment_allowed <= 0;    // Reset increment allowed
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-endmodule
+// endmodule
 
 
 module output_datapath (
-    input  logic        clk,
-    input  logic        reset,
-    input  logic        load,
-    input  logic        shift,
-    input  logic        src_ready,
-    input  logic        done_matrix_mult, // for dest_valid (it goes to reg_def and then from ther we'll get dest_valid basically after one clk cycle)
+    input  logic         clk,
+    input  logic         reset,
+    input  logic         load,
+    input  logic         shift,
+    input  logic         src_ready,
     input  logic [511:0] systolic_output,
-    input   logic         dest_valid,
+    input   logic        dest_valid,
     output logic [63:0]  final_data_out,
-    output logic      sh_count_done,
+    output logic         sh_count_done,
     output logic         tx_two_done
 );
 
@@ -77,7 +67,10 @@ module output_datapath (
         .data_out(feeder_to_rv)
     );
 
-    counter_controlled sh_counter_i_e (
+    controlled_counter #(
+        .count_width(2),
+        .count_limit(7)
+    ) sh_counter_output_datapath (
         .clk(clk),
         .rst(reset),
         .enable(shift),

@@ -1,31 +1,29 @@
-module counter_controlled (
-    input  logic clk,
-    input  logic rst,             // Active-high, posedge reset
-    input  logic enable,          // Enable signal
-    output logic count_done,
-    output logic [1:0] count
-);
+// module counter_controlled (
+//     input  logic clk,
+//     input  logic rst,             // Active-high, posedge reset
+//     input  logic enable,          // Enable signal
+//     output logic count_done,
+//     output logic [1:0] count
+// );
+//     always_ff @(posedge clk or posedge rst) begin
+//         if (rst) begin
+//             count <= 0;
+//             count_done <= 0;
+//         end else begin
+//             count_done <= 0; // Default: no done signal
+//             if (enable) begin
+//                 if (count < 4) begin
+//                     count <= count + 1;
+//                     if (count + 1 == 4) begin
+//                         count_done <= 1;
+//                         count <= 0;
+//                     end
+//                 end
+//             end
+//         end
+//     end
 
-    logic increment_allowed; // Flag to allow incrementing the count
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            count <= 0;
-            count_done <= 0;
-        end else begin
-            count_done <= 0; // Default: no done signal
-        if (enable) begin
-            if (count < 4) begin
-                count <= count + 1;
-                if (count + 1 == 4) begin
-                    count_done <= 1;
-                    count <= 0;
-                end
-            end
-        end
-        end
-    end
-
-endmodule
+// endmodule
 module input_datapath(
     input logic clk,
     input logic reset,
@@ -66,14 +64,14 @@ module input_datapath(
     );
 
     //manager circuit
-    counter_controlled row_counter (
+    controlled_counter row_counter (
         .clk(clk),
         .rst(reset),
         .enable(next_row),
         .count_done(row_done),
         .count(row_count)
     );
-    counter_controlled col_counter (
+    controlled_counter col_counter (
         .clk(clk),
         .rst(reset),
         .enable(next_col),
