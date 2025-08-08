@@ -30,7 +30,7 @@
 module output_datapath (
     input  logic         clk,
     input  logic         reset,
-    input  logic         load,
+    input  logic         load_out,
     input  logic         shift,
     input  logic         src_ready,
     input  logic [511:0] systolic_output,
@@ -63,7 +63,7 @@ module output_datapath (
         .data_in(buffer_to_feeder),
         .shift(shift),
         .reset(reset),
-        .load(load),
+        .load(load_out),
         .data_out(feeder_to_rv)
     );
 

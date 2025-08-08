@@ -32,8 +32,7 @@ module input_datapath(
     input logic dest_ready,
     input logic next_row,
     input logic next_col,
-    output logic [55:0] data_out[2:0],
-    output logic load_done,
+    output logic load_in_done,
     output logic tx_one_done,
     output logic [55:0]B_c1,
     output logic [55:0]B_c2,
@@ -79,7 +78,7 @@ module input_datapath(
         .count(col_count) 
     );
 
-    assign load_done = row_done && col_done;
+    assign load_in_done = row_done && col_done;
 
     logic [31:0] row_data;
     logic [31:0] col_data;

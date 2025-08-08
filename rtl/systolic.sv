@@ -14,19 +14,26 @@
 
 typedef enum logic [2:0] {
     IDLE,
+    RECEIVE,
+    IN_COUNT,
+    LOAD_IN,
     FEED,
     PROCESSING,
-    DONE
+    DONE,
+    LOAD_OUT,
+    TRANSFER,
+    SHIFT_COUNT
 } state_type;
 
 module systolic(
     input logic clk,
     input logic reset,
     input logic valid_in,
-    input logic [127:0] matrix_A,
-    input logic [127:0] matrix_B,
-    output logic [511:0] y,
-    output logic done_matrix_mult
+    input logic [63:0] data_in,
+    input logic src_valid,
+    input logic src_ready,
+    output logic [63:0]  final_data_out
+    output logic done_matrix_mult;
 );
     logic [55:0] A_r [4];
     logic [55:0] B_c [4];
@@ -38,19 +45,30 @@ module systolic(
     logic signed [7:0] B_c_out [4];
     logic done [0:3][0:3];
     logic valid_out [0:3][0:3];
+    logic dest_ready,next_col,next_row,load_in_done,tx_one_done;//input_datapath signals
+    logic load_out,dest_valid,shift,tx_two_done,sh_count_done;//output_datapath signals
 
     state_type state, next_state;
 
-    //decoding input matrices
-    assign A_r[0]= {matrix_A[127:96],24'b0};
-    assign A_r[1]= {8'b0,matrix_A[95:64],16'b0};
-    assign A_r[2]= {16'b0,matrix_A[63:32],8'b0};
-    assign A_r[3]= {24'b0,matrix_A[31:0]};
-
-    assign B_c[0]= {matrix_B[127:120], matrix_B[95:88], matrix_B[63:56], matrix_B[31:24],24'b0};
-    assign B_c[1]= {8'b0,matrix_B[119:112], matrix_B[87:80], matrix_B[55:48], matrix_B[23:16],16'b0};
-    assign B_c[2]= {16'b0,matrix_B[111:104], matrix_B[79:72], matrix_B[47:40], matrix_B[15:8],8'b0};
-    assign B_c[3]= {24'b0,matrix_B[103:96], matrix_B[71:64], matrix_B[39:32], matrix_B[7:0]};
+    input_datapath input_dp (
+        .clk(clk),
+        .reset(reset),
+        .data_in(data_in),
+        .src_valid(src_valid),
+        .dest_ready(dest_ready),
+        .next_row(next_row),
+        .next_col(next_col),
+        .load_in_done(load_in_done),
+        .tx_one_done(tx_one_done),
+        .B_c1(B_c[0]),
+        .B_c2(B_c[1]),
+        .B_c3(B_c[2]),
+        .B_c4(B_c[3]),
+        .A_r1(A_r[0]),
+        .A_r2(A_r[1]),
+        .A_r3(A_r[2]),
+        .A_r4(A_r[3])
+    );
     
     // Instantiate data feeders for each row of A and column of B
 
@@ -121,6 +139,21 @@ module systolic(
         y_o[2][0], y_o[2][1], y_o[2][2], y_o[2][3],
         y_o[3][0], y_o[3][1], y_o[3][2], y_o[3][3]
     };
+    // Output datapath
+    output_datapath output_dp (
+        .clk(clk),
+        .reset(reset),
+        .load_out(load_out),
+        .shift(shift),
+        .src_ready(src_ready),
+        .systolic_output(y),
+        .dest_valid(dest_valid),
+        .final_data_out(final_data_out),
+        .sh_count_done(sh_count_done),
+        .tx_two_done(tx_two_done)
+    );
+
+
 
 
     //state register
@@ -138,6 +171,20 @@ module systolic(
 
     //next state and output logic
     always_comb begin
+        dest_ready=1'b0;
+        dest_valid=1'b0;
+        shift=1'b0;
+        done_matrix_mult=1'b0;
+        sh_count_done=1'b0;
+        for(int x=0;x<4;x++)begin
+            sh_fr[x]=1'b0;
+            sh_fc[x]=1'b0;
+            load_fr[x]=1'b0;
+            load_fc[x]=1'b0;
+            for(int y=0;y<4;y++)begin
+                valid[x][y]=1'b0;
+            end
+        end
 
         valid_out_flag = valid_out[0][0] && valid_out[0][1] && valid_out[0][2] && valid_out[0][3] &&
                     valid_out[1][0] && valid_out[1][1] && valid_out[1][2] && valid_out[1][3] &&
@@ -150,24 +197,10 @@ module systolic(
         case(state)
             
             IDLE:begin
-                
-                for(int x=0;x<4;x++)begin
-                    sh_fr[x]=1'b0;
-                    sh_fc[x]=1'b0;
-                    load_fr[x]=1'b0;
-                    load_fc[x]=1'b0;
-                    for(int y=0;y<4;y++)begin
-                        valid[x][y]=1'b0;
-                    end
-                end
 
                 if(valid_in)begin
-                    for (int j=0;j<4;j++)begin                        
-                        load_fr[j]=1'b1;
-                        load_fc[j]=1'b1;
-                    end
-                    next_state = FEED;
-                    done_matrix_mult=0;
+                    next_state = RECEIVE;
+                    dest_ready=1'b1;
                 end
                 
                 else begin  
@@ -176,14 +209,36 @@ module systolic(
                 end
             
             end
-            
-            FEED:begin
 
+
+            RECEIVE:begin
+                dest_ready=1'b1;
+                if(tx_one_done)begin
+                    dest_ready=1'b0;
+                    next_col=1'b1;
+                    next_row=1'b1;
+                    next_state=IN_COUNT;
+                end
+            end
+
+
+            IN_COUNT:begin
+                next_state=LOAD_IN;
+                next_col=1'b0;
+                next_row=1'b0;
+            end
+
+            LOAD_IN:begin
+                dest_ready=1'b1;
+                next_state=RECEIVE;
+                if(load_in_done)begin
+                    next_state=FEED;
+                    dest_ready=1'b0;
+                end
+            end
+
+            FEED:begin
                 for(int x=0;x<4;x++)begin
-                    sh_fr[x]=1'b0;
-                    sh_fc[x]=1'b0;
-                    load_fr[x]=1'b0;
-                    load_fc[x]=1'b0;
                     for(int y=0;y<4;y++)begin
                         valid[x][y]=1'b1;
                     end
@@ -197,7 +252,6 @@ module systolic(
 
                 if(valid_out_flag)
                     begin
-                        done_matrix_mult=1;
                         next_state=DONE;
                     end
 
@@ -206,48 +260,43 @@ module systolic(
                         for(int x=0;x<4;x++)begin
                             sh_fr[x]=1'b1;
                             sh_fc[x]=1'b1;
-                            load_fr[x]=1'b0;
-                            load_fc[x]=1'b0;
-                            for(int y=0;y<4;y++)begin
-                                valid[x][y]=1'b0;
-                            end
+                        end
                         next_state = FEED;
-                        done_matrix_mult=0;
-                    end
                     end
             
                 else 
-
                     begin
-                        for(int x=0;x<4;x++)begin
-                            sh_fr[x]=1'b0;
-                            sh_fc[x]=1'b0;
-                            load_fr[x]=1'b0;
-                            load_fc[x]=1'b0;
-                            for(int y=0;y<4;y++)begin
-                                valid[x][y]=1'b0;
-                            end
-                        end
-                            next_state=PROCESSING;
-                            done_matrix_mult=0;
+                        next_state=PROCESSING;
                     end    
                 
             end
 
             DONE:begin
-                for(int x=0;x<4;x++)begin
-                    sh_fr[x]=1'b0;
-                    sh_fc[x]=1'b0;
-                    load_fr[x]=1'b0;
-                    load_fc[x]=1'b0;
-                    for(int y=0;y<4;y++)begin
-                        valid[x][y]=1'b0;
-                    end
-                end
-                done_matrix_mult=1;
-                next_state=IDLE;
+                load_out=1'b1;
+                next_state=LOAD_OUT;
             end
 
+            LOAD_OUT:begin
+                dest_valid=1'b1;
+                next_state=TRANSFER;
+            end
+
+            TRANSFER:begin
+                dest_valid=1'b1;
+                if(tx_two_done)begin
+                    dest_valid=1'b0;
+                    shift=1'b1;
+                    next_state=SHIFT_COUNT;
+                end
+            end
+
+            SHIFT_COUNT:begin
+                dest_valid=1'b1;
+                next_state=TRANSFER;
+                if(sh_count_done)begin
+                    done_matrix_mult=1'b1;
+                end
+            end
             default: begin
                 next_state = IDLE;
             end
