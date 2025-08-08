@@ -12,7 +12,7 @@
 `timescale 1ns/1ps
 
 
-typedef enum logic [2:0] {
+typedef enum logic [3:0] {
     IDLE,
     RECEIVE,
     IN_COUNT,
@@ -32,11 +32,12 @@ module systolic(
     input logic [63:0] data_in,
     input logic src_valid,
     input logic src_ready,
-    output logic [63:0]  final_data_out
-    output logic done_matrix_mult;
+    output logic [63:0]  final_data_out,
+    output logic done_matrix_mult
 );
     logic [55:0] A_r [4];
     logic [55:0] B_c [4];
+    logic [511:0] y;
     logic sh_fr [4];
     logic sh_fc [4];
     logic load_fc[4];
@@ -212,13 +213,16 @@ module systolic(
 
 
             RECEIVE:begin
-                dest_ready=1'b1;
+               
                 if(tx_one_done)begin
                     dest_ready=1'b0;
-                    next_col=1'b1;
-                    next_row=1'b1;
                     next_state=IN_COUNT;
                 end
+                else
+                    begin
+                        dest_ready=1'b1;
+                        next_state=RECEIVE;
+                    end
             end
 
 
@@ -229,7 +233,9 @@ module systolic(
             end
 
             LOAD_IN:begin
-                dest_ready=1'b1;
+               
+                next_col=1'b1;
+                next_row=1'b1;
                 next_state=RECEIVE;
                 if(load_in_done)begin
                     next_state=FEED;

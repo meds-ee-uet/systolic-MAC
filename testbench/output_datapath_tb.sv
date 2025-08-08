@@ -5,7 +5,7 @@ module output_datapath_tb;
   // DUT signals
   logic clk = 0;
   logic reset = 0;
-  logic load = 0;
+  logic load_out = 0;
   logic shift = 0;
   logic src_ready = 0;
   logic [511:0] systolic_output = 0;
@@ -22,7 +22,7 @@ module output_datapath_tb;
   output_datapath dut (
     .clk(clk),
     .reset(reset),
-    .load(load),
+    .load_out(load_out),
     .shift(shift),
     .src_ready(src_ready),
   //  .done_matrix_mult(done_matrix_mult),
@@ -41,12 +41,12 @@ module output_datapath_tb;
     @(posedge clk);
   endtask
 
-  task load_data(input [511:0] data);
+  task load_out_data(input [511:0] data);
     systolic_output <= data;
     @(posedge clk);
-    load <= 1;
+    load_out <= 1;
     @(posedge clk);
-    load <= 0;
+    load_out <= 0;
     @(posedge clk);
   endtask
 
@@ -87,14 +87,14 @@ module output_datapath_tb;
     reset_dut();
     @(posedge clk);
 
-    load_data(test_data);
+    load_out_data(test_data);
 
     $display("T=%0t: buffer_to_feeder = %h", $time, dut.buffer_to_feeder);
 
     $monitor("T=%0t: feeder_to_rv = %h | count = %0d | sh_count_done = %b ", 
               $time, dut.feeder_to_rv, dut.sh_counter_output_datapath.count, dut.sh_count_done);
 
-    @(posedge clk); // Let load settle
+    @(posedge clk); // Let load_out settle
     @(posedge clk); // Wait one extra cycle so first output appears next cycle// 
     observe_64bit_block(0);
 

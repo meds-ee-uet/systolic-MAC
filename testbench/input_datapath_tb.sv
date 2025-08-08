@@ -14,8 +14,8 @@ module input_datapath_tb;
   logic next_col;
 
   // Outputs from DUT
-  logic [55:0] data_out[2:0];
-  logic load_done;
+ 
+  logic load_in_done;
   logic tx_one_done;
   logic [55:0]B_c1, B_c2, B_c3, B_c4;
   logic [55:0]A_r1, A_r2, A_r3, A_r4;
@@ -29,8 +29,8 @@ module input_datapath_tb;
     .dest_ready(dest_ready),
     .next_row(next_row),
     .next_col(next_col),
-    .data_out(data_out),
-    .load_done(load_done),
+   
+    .load_in_done(load_in_done),
     .tx_one_done(tx_one_done),
     .B_c1(B_c1), .B_c2(B_c2), .B_c3(B_c3), .B_c4(B_c4),
     .A_r1(A_r1), .A_r2(A_r2), .A_r3(A_r3), .A_r4(A_r4)
@@ -90,9 +90,9 @@ module input_datapath_tb;
       $display("T=%0t: row_count=%0d, col_count=%0d", $time, dut.row_count, dut.col_count);
     end
 
-    // Wait for load_done signal
-    wait (load_done == 1);
-    $display("T=%0t: load_done = %b", $time, load_done);
+    // Wait for load_in_done signal
+    wait (load_in_done == 1);
+    $display("T=%0t: load_in_done = %b", $time, load_in_done);
 
     // Display final outputs
     $display("A_r1 = %h", A_r1);
