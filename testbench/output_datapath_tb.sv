@@ -63,8 +63,8 @@ module output_datapath_tb;
     dest_valid <= 0;
     src_ready <= 0;
     @(posedge clk);
-    $display("T=%0t | Chunk %0d out = %h | en_data_Tx = %b | tx_two_done = %b", 
-              $time, index, final_data_out, dut.rv_two.en_data_Tx, tx_two_done);
+    $display("T=%0t | Chunk %0d out = %h |  tx_two_done = %b", 
+              $time, index, final_data_out,  tx_two_done);
   endtask
 
   task observe_64bit_block(input int index);
@@ -76,8 +76,8 @@ module output_datapath_tb;
     dest_valid <= 0;
     src_ready <= 0;
     @(posedge clk);
-    $display("T=%0t | Chunk %0d out = %h | en_data_Tx = %b | tx_two_done = %b",
-              $time, index, final_data_out, dut.rv_two.en_data_Tx, tx_two_done);
+    $display("T=%0t | Chunk %0d out = %h | tx_two_done = %b",
+              $time, index, final_data_out,  tx_two_done);
   endtask
 
   // Main test
@@ -91,8 +91,8 @@ module output_datapath_tb;
 
     $display("T=%0t: buffer_to_feeder = %h", $time, dut.buffer_to_feeder);
 
-    $monitor("T=%0t: feeder_to_rv = %h | count = %0d | sh_count_done = %b | en_data_Tx = %b", 
-              $time, dut.feeder_to_rv, dut.sh_counter_i_e.count, dut.sh_count_done, dut.rv_two.en_data_Tx);
+    $monitor("T=%0t: feeder_to_rv = %h | count = %0d | sh_count_done = %b ", 
+              $time, dut.feeder_to_rv, dut.sh_counter_output_datapath.count, dut.sh_count_done);
 
     @(posedge clk); // Let load settle
     @(posedge clk); // Wait one extra cycle so first output appears next cycle// 
