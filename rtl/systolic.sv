@@ -219,14 +219,6 @@ module systolic(
                     next_state=IN_COUNT;
                 end
                 
-                else if (load_in_done)begin
-                    for(int x=0;x<4;x++)begin
-                        load_fr[x]=1'b1;
-                        load_fc[x]=1'b1;    
-                    end
-                    next_state=FEED;
-                end
-                
                 else begin
                     dest_ready=1'b1;
                     next_state=RECEIVE;
@@ -235,6 +227,14 @@ module systolic(
             end
 
             IN_COUNT:begin
+                if (load_in_done)begin
+                    for(int x=0;x<4;x++)begin
+                        load_fr[x]=1'b1;
+                        load_fc[x]=1'b1;    
+                    end
+                    next_state=FEED;
+                end
+                
                 next_state=LOAD_IN;
             end
 
