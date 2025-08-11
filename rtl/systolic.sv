@@ -234,8 +234,7 @@ module systolic(
                     end
                     next_state=FEED;
                 end
-                
-                next_state=LOAD_IN;
+                else next_state=LOAD_IN;
             end
 
             LOAD_IN:begin
