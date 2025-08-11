@@ -186,6 +186,8 @@ module systolic(
                 valid[x][y]=1'b0;
             end
         end
+        next_col=1'b0;
+        next_row=1'b0;
 
         valid_out_flag = valid_out[0][0] && valid_out[0][1] && valid_out[0][2] && valid_out[0][3] &&
                     valid_out[1][0] && valid_out[1][1] && valid_out[1][2] && valid_out[1][3] &&
@@ -211,36 +213,37 @@ module systolic(
             
             end
 
-
-            RECEIVE:begin
-               
+            RECEIVE:begin    
+    
                 if(tx_one_done)begin
-                    dest_ready=1'b0;
                     next_state=IN_COUNT;
                 end
-                else
-                    begin
-                        dest_ready=1'b1;
-                        next_state=RECEIVE;
+                
+                else if (load_in_done)begin
+                    for(int x=0;x<4;x++)begin
+                        load_fr[x]=1'b1;
+                        load_fc[x]=1'b1;    
                     end
+                    next_state=FEED;
+                end
+                
+                else begin
+                    dest_ready=1'b1;
+                    next_state=RECEIVE;
+                end
+            
             end
-
 
             IN_COUNT:begin
                 next_state=LOAD_IN;
-                next_col=1'b0;
-                next_row=1'b0;
             end
 
             LOAD_IN:begin
-               
+                
                 next_col=1'b1;
                 next_row=1'b1;
                 next_state=RECEIVE;
-                if(load_in_done)begin
-                    next_state=FEED;
-                    dest_ready=1'b0;
-                end
+
             end
 
             FEED:begin

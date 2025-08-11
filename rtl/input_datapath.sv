@@ -78,7 +78,7 @@ module input_datapath(
         .count(col_count) 
     );
 
-    assign load_in_done = row_done && col_done;
+    assign load_in_done = (row_count==2'b11) && (col_count==2'b11);
 
     logic [31:0] row_data;
     logic [31:0] col_data;

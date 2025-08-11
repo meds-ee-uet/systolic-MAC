@@ -54,9 +54,7 @@ module systolic_top_tb;
 
         src_valid = 0;
         @(posedge clk);
-         valid_in = 1;
-        @(posedge clk);
-        valid_in = 0;
+        repeat(3)@(posedge clk);
 
         // Send 4 input 64-bit chunks (Matrix A and B)
 
@@ -68,9 +66,7 @@ module systolic_top_tb;
 
         src_valid = 0;
         @(posedge clk);
-         valid_in = 1;
-        @(posedge clk);
-        valid_in = 0;
+        repeat(3)@(posedge clk);
 
         // Send 4 input 64-bit chunks (Matrix A and B)
 
@@ -84,11 +80,8 @@ module systolic_top_tb;
         @(posedge clk);
         src_valid = 0;
         @(posedge clk);
-         valid_in = 1;
-        @(posedge clk);
-        valid_in = 0;
-
         // Send 4 input 64-bit chunks (Matrix A and B)
+        repeat(3)@(posedge clk);
 
 
         // Fourth 64-bit chunk
@@ -99,6 +92,7 @@ module systolic_top_tb;
         @(posedge clk);
         // End of input
         src_valid = 0;
+        repeat(3)@(posedge clk);
 
         // Wait for processing to complete
         wait(done_matrix_mult == 1);
