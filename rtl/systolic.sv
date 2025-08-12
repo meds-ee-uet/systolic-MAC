@@ -285,25 +285,26 @@ module systolic(
             end
 
             LOAD_OUT:begin
+                load_out=1'b0;
                 dest_valid=1'b1;
                 next_state=TRANSFER;
             end
 
             TRANSFER:begin
-                dest_valid=1'b1;
                 if(tx_two_done)begin
-                    dest_valid=1'b0;
                     shift=1'b1;
                     next_state=SHIFT_COUNT;
                 end
+                else dest_valid=1'b1;
             end
 
             SHIFT_COUNT:begin
                 dest_valid=1'b1;
-                next_state=TRANSFER;
                 if(sh_count_done)begin
                     done_matrix_mult=1'b1;
+                    next_state=IDLE;
                 end
+                else next_state=TRANSFER;
             end
             default: begin
                 next_state = IDLE;
