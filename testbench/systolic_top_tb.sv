@@ -88,7 +88,7 @@ module systolic_top_tb;
 
  
  
-        for (int i = 0; i < 8; i++) begin
+        for (int i = 0; i < 16; i++) begin
           
             src_ready = 1;
             wait(final_data_out);

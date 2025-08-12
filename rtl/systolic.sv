@@ -176,7 +176,6 @@ module systolic(
         dest_valid=1'b0;
         shift=1'b0;
         done_matrix_mult=1'b0;
-        sh_count_done=1'b0;
         for(int x=0;x<4;x++)begin
             sh_fr[x]=1'b0;
             sh_fc[x]=1'b0;
