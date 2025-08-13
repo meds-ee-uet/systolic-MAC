@@ -9,6 +9,11 @@ module systolic_top_tb;
     logic src_valid;
     logic src_ready;
     logic [63:0] final_data_out;
+    logic signed [31:0] el1;
+    logic signed [31:0] el2;
+
+    assign el2 = final_data_out[31:0];
+    assign el1 = final_data_out[63:32];
     //logic done_matrix_mult;
 
     systolic dut (
@@ -32,20 +37,21 @@ module systolic_top_tb;
         src_valid = 0;
         src_ready = 0;
 
-        // Reset the DUT
+        // ------------------------
+        // FIRST RUN (positive integers)
+        // ------------------------
         @(posedge clk);
         reset = 0;
         @(posedge clk);
 
-        // Indicate start of valid input
         valid_in = 1;
         @(posedge clk);
         valid_in = 0;
-       
+
         // First 64-bit chunk
         data_in = {
-            8'd1, 8'd2, 8'd3, 8'd4,
-            8'd1, 8'd5, 8'd9, 8'd13
+            8'd1,  8'd2,  8'd3,  8'd4,
+            8'd1,  8'd5,  8'd9,  8'd13
         };
         @(posedge clk);
         src_valid = 1;
@@ -53,10 +59,10 @@ module systolic_top_tb;
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Second 64-bit chunk
+        // Second chunk
         data_in = {
-            8'd5, 8'd6, 8'd7, 8'd8,
-            8'd2, 8'd6, 8'd10, 8'd14
+            8'd5,  8'd6,  8'd7,  8'd8,
+            8'd2,  8'd6,  8'd10, 8'd14
         };
         @(posedge clk);
         src_valid = 1;
@@ -64,10 +70,10 @@ module systolic_top_tb;
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Third 64-bit chunk
+        // Third chunk
         data_in = {
-            8'd9, 8'd10, 8'd11, 8'd12,
-            8'd3, 8'd7, 8'd11, 8'd15
+            8'd9,  8'd10, 8'd11, 8'd12,
+            8'd3,  8'd7,  8'd11, 8'd15
         };
         @(posedge clk);
         src_valid = 1;
@@ -75,10 +81,10 @@ module systolic_top_tb;
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Fourth 64-bit chunk
+        // Fourth chunk
         data_in = {
             8'd13, 8'd14, 8'd15, 8'd16,
-            8'd4, 8'd8, 8'd12, 8'd16
+            8'd4,  8'd8,  8'd12, 8'd16
         };
         @(posedge clk);
         src_valid = 1;
@@ -86,18 +92,84 @@ module systolic_top_tb;
         src_valid = 0;
         repeat(3) @(posedge clk);
 
- 
- 
+        // Read outputs
         for (int i = 0; i < 16; i++) begin
-          
             src_ready = 1;
             wait(final_data_out);
-            @(posedge clk); // Give valid data time to propagate
-            $display("T=%0t | Chunk %0d = %h", $time, i, final_data_out);
+            @(posedge clk);
+            $display("T=%0t | Run 1 Chunk %0d = %h", $time, i, final_data_out);
             src_ready = 0;
         end
+        $display("== Run 1 complete ==");
 
-        $display("== All chunks received ==");
+
+
+        repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
+
+
+        // ------------------------
+        // SECOND RUN (with negative integers too) & NO RESET
+        // ------------------------
+        $display("\n== Starting Run 2 with negative integers ==");
+        @(posedge clk);
+        valid_in = 1;
+        @(posedge clk);
+        valid_in = 0;
+
+        // First chunk
+        data_in = {
+            8'd23,  8'd54,  8'd65,  8'd32,
+            8'd23,  8'd73,  8'd92,  8'd1
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Second chunk
+        data_in = {
+            8'd73,  8'd37,  8'd37,  8'd37,
+            8'd54, 8'd37,  8'd61, 8'd2
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Third chunk
+        data_in = {
+            8'd92,  8'd61, 8'd31, 8'd30,
+            8'd65,  8'd37, 8'd31, 8'd3
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Fourth chunk
+        data_in = {
+            8'd1, 8'd2, 8'd3, 8'd9,
+            8'd32,  8'd37,  8'd30, 8'd9
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Read outputs for second run
+        for (int i = 0; i < 16; i++) begin
+            src_ready = 1;
+            wait(final_data_out);
+            @(posedge clk);
+            $display("T=%0t | Run 2 Chunk %0d = %h", $time, i, final_data_out);
+            src_ready = 0;
+        end
+        $display("== Run 2 complete ==");
+
         #50;
         $finish;
     end

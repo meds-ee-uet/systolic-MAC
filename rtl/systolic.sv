@@ -35,8 +35,8 @@ module systolic(
     output logic [63:0]  final_data_out,
     output logic done_matrix_mult
 );
-    logic [55:0] A_r [4];
-    logic [55:0] B_c [4];
+    logic signed [55:0] A_r [4];
+    logic signed [55:0] B_c [4];
     logic [511:0] y;
     logic final_transfer;
     logic sh_fr [4];
@@ -49,6 +49,7 @@ module systolic(
     logic valid_out [0:3][0:3];
     logic dest_ready,next_col,next_row,load_in_done,tx_one_done;//input_datapath signals
     logic load_out,dest_valid,shift,tx_two_done,sh_count_done;//output_datapath signals
+    logic res_internal;
 
     state_type state, next_state;
 
@@ -121,7 +122,7 @@ module systolic(
         for (n = 0; n < 4; n=n+1) begin : COL
         pe PEij (
             .clk(clk),
-            .reset(reset),
+            .reset(reset||res_internal),
             .valid(valid[m][n]),
             .A_in(A_bus[m][n]),
             .B_in(B_bus[m][n]),
@@ -177,6 +178,7 @@ module systolic(
         dest_valid=1'b0;
         shift=1'b0;
         done_matrix_mult=1'b0;
+        load_out=1'b0;
         for(int x=0;x<4;x++)begin
             sh_fr[x]=1'b0;
             sh_fc[x]=1'b0;
@@ -200,6 +202,7 @@ module systolic(
         case(state)
             
             IDLE:begin
+                res_internal = 1'b0;
                 final_transfer=1'b0;
                 if(valid_in)begin
                     next_state = RECEIVE;
@@ -232,6 +235,7 @@ module systolic(
                         load_fr[x]=1'b1;
                         load_fc[x]=1'b1;    
                     end
+                    load_in_done=1'b0;
                     next_state=FEED;
                 end
                 else next_state=LOAD_IN;
@@ -285,7 +289,6 @@ module systolic(
             end
 
             LOAD_OUT:begin
-                load_out=1'b0;
                 dest_valid=1'b1;
                 next_state=TRANSFER;
             end
@@ -296,6 +299,9 @@ module systolic(
                     if(final_transfer)begin
                         next_state=IDLE;
                         done_matrix_mult=1'b1;
+                        next_col=1'b1;
+                        next_row=1'b1;
+                        res_internal=1'b1;
                     end
                     else begin
                         shift=1'b1;
