@@ -38,6 +38,7 @@ module systolic(
     logic [55:0] A_r [4];
     logic [55:0] B_c [4];
     logic [511:0] y;
+    logic final_transfer;
     logic sh_fr [4];
     logic sh_fc [4];
     logic load_fc[4];
@@ -199,7 +200,7 @@ module systolic(
         case(state)
             
             IDLE:begin
-
+                final_transfer=1'b0;
                 if(valid_in)begin
                     next_state = RECEIVE;
                     dest_ready=1'b1;
@@ -290,20 +291,24 @@ module systolic(
             end
 
             TRANSFER:begin
+                sh_count_done=sh_count_done?1:0;
                 if(tx_two_done)begin
-                    shift=1'b1;
-                    next_state=SHIFT_COUNT;
+                    if(final_transfer)begin
+                        next_state=IDLE;
+                        done_matrix_mult=1'b1;
+                    end
+                    else begin
+                        shift=1'b1;
+                        next_state=SHIFT_COUNT;
+                    end
                 end
                 else dest_valid=1'b1;
             end
 
             SHIFT_COUNT:begin
+                if(sh_count_done) final_transfer=1'b1;
                 dest_valid=1'b1;
-                if(sh_count_done)begin
-                    done_matrix_mult=1'b1;
-                    next_state=IDLE;
-                end
-                else next_state=TRANSFER;
+                next_state=TRANSFER;
             end
             default: begin
                 next_state = IDLE;
