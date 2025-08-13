@@ -14,7 +14,7 @@ module systolic_top_tb;
 
     assign el2 = final_data_out[31:0];
     assign el1 = final_data_out[63:32];
-    //logic done_matrix_mult;
+    logic done_matrix_mult;
 
     systolic dut (
         .clk(clk),
@@ -23,8 +23,8 @@ module systolic_top_tb;
         .data_in(data_in),
         .src_valid(src_valid),
         .src_ready(src_ready),
-        .final_data_out(final_data_out)
-        //.done_matrix_mult(done_matrix_mult)
+        .final_data_out(final_data_out),
+        .done_matrix_mult(done_matrix_mult)
     );
 
     always #5 clk = ~clk; // Clock: 10ns period
@@ -118,8 +118,8 @@ module systolic_top_tb;
 
         // First chunk
         data_in = {
-            8'd23,  8'd54,  8'd65,  8'd32,
-            8'd23,  8'd73,  8'd92,  8'd1
+            8'd23,  8'd54,  -8'd65,  8'd32,
+            8'd23,  -8'd73,  8'd92,  8'd1
         };
         @(posedge clk);
         src_valid = 1;
@@ -129,8 +129,8 @@ module systolic_top_tb;
 
         // Second chunk
         data_in = {
-            8'd73,  8'd37,  8'd37,  8'd37,
-            8'd54, 8'd37,  8'd61, 8'd2
+            -8'd73,  8'd37,  -8'd37,  8'd37,
+            8'd54, -8'd37,  8'd61, 8'd2
         };
         @(posedge clk);
         src_valid = 1;
@@ -140,8 +140,8 @@ module systolic_top_tb;
 
         // Third chunk
         data_in = {
-            8'd92,  8'd61, 8'd31, 8'd30,
-            8'd65,  8'd37, 8'd31, 8'd3
+            8'd92,  -8'd61, 8'd31, 8'd30,
+            8'd65,  8'd37, 8'd31, -8'd3
         };
         @(posedge clk);
         src_valid = 1;
@@ -151,8 +151,8 @@ module systolic_top_tb;
 
         // Fourth chunk
         data_in = {
-            8'd1, 8'd2, 8'd3, 8'd9,
-            8'd32,  8'd37,  8'd30, 8'd9
+            -8'd1, -8'd2, 8'd3, 8'd9,
+            8'd32,  8'd37,  -8'd30, 8'd9
         };
         @(posedge clk);
         src_valid = 1;
@@ -163,11 +163,9 @@ module systolic_top_tb;
         // Read outputs for second run
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
-            wait(final_data_out);
-            @(posedge clk);
-            $display("T=%0t | Run 2 Chunk %0d = %h", $time, i, final_data_out);
-            src_ready = 0;
+                 
         end
+
         $display("== Run 2 complete ==");
 
         #50;
