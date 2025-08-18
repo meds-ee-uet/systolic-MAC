@@ -92,6 +92,7 @@ module systolic_top_tb;
         src_valid = 0;
         repeat(3) @(posedge clk);
 
+      
         // Read outputs
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;

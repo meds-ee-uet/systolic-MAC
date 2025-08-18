@@ -290,11 +290,11 @@ module systolic(
             end
 
             DONE:begin
-                load_out=1'b1;
                 next_state=LOAD_OUT;
             end
 
             LOAD_OUT:begin
+                load_out=1'b1;
                 dest_valid=1'b1;
                 next_state=TRANSFER;
             end
