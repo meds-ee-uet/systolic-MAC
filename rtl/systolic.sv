@@ -268,12 +268,8 @@ module systolic(
 
             PROCESSING:begin
                 
-                if(valid_out_flag)
-                    begin
-                        next_state=DONE;
-                    end
-
-                else if (~(valid_out_flag)&&(done_flag))
+              
+                if (~(valid_out_flag)&&(done_flag))
                     begin
                         for(int x=0;x<4;x++)begin
                             sh_fr[x]=1'b1;
@@ -314,7 +310,13 @@ module systolic(
                         next_state=SHIFT_COUNT;
                     end
                 end
-                else dest_valid=1'b1;
+                else 
+                    begin
+                        dest_valid=1'b1;
+                        next_state=TRANSFER;
+                    end
+
+
             end
 
             SHIFT_COUNT:begin
