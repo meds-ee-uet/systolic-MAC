@@ -26,7 +26,7 @@ module pe(
 );
 
     logic signed [31:0] y;
-    logic en_y;
+    // logic en_y;
     mac_unit mac_unit_inst (
         .clk(clk),
         .reset(reset),
@@ -58,23 +58,23 @@ module pe(
         .clk(clk),
         .reset(reset),
         .done(done),
-        .en_y(en_y)
+        .en_y(valid_out)
     );
 
     reg_def #(.WIDTH(32)) reg_y(
         .x(y),
-        .enable(en_y),
+        .enable(valid_out),
         .clk(clk),
         .clear(reset),
         .y(y_out)
     );
 
-    reg_def #(.WIDTH(1)) delay_reg (
-        .x(en_y),
-        .enable(1'b1),
-        .clk(clk),
-        .clear(reset | valid_out),
-        .y(valid_out)
-);
+//     reg_def #(.WIDTH(1)) delay_reg (
+//         .x(en_y),
+//         .enable(1'b1),
+//         .clk(clk),
+//         .clear(reset | valid_out),
+//         .y(valid_out)
+// );
 
 endmodule

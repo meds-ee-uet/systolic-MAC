@@ -235,7 +235,7 @@ module systolic(
                         load_fr[x]=1'b1;
                         load_fc[x]=1'b1;    
                     end
-                    load_in_done=1'b0;
+                    // load_in_done=1'b0;
                     next_state=FEED;
                 end
                 else next_state=LOAD_IN;
@@ -250,18 +250,24 @@ module systolic(
             end
 
             FEED:begin
-                for(int x=0;x<4;x++)begin
-                    for(int y=0;y<4;y++)begin
-                        valid[x][y]=1'b1;
+                if(valid_out_flag)
+                    begin
+                        next_state=DONE;
                     end
+                else begin
+                    for(int x=0;x<4;x++)begin
+                        for(int y=0;y<4;y++)begin
+                            valid[x][y]=1'b1;
+                        end
+                    end
+                    next_state=PROCESSING;
+                    done_matrix_mult=0;
                 end
-                next_state=PROCESSING;
-                done_matrix_mult=0;
 
             end
 
             PROCESSING:begin
-
+                
                 if(valid_out_flag)
                     begin
                         next_state=DONE;
