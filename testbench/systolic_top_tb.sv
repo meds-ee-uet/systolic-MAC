@@ -46,7 +46,7 @@ module systolic_top_tb;
 
         valid_in = 1;
         @(posedge clk);
-        valid_in = 0;
+        valid_in = #1 0;
 
         // First 64-bit chunk
         data_in = {
@@ -115,7 +115,7 @@ module systolic_top_tb;
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
-        valid_in = 0;
+        valid_in = #1 0;
 
         // First chunk
         data_in = {
