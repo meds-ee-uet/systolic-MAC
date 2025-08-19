@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ps/1ps
 
 module systolic_top_tb;
 
@@ -27,7 +27,7 @@ module systolic_top_tb;
         .done_matrix_mult(done_matrix_mult)
     );
 
-    always #5 clk = ~clk; // Clock: 10ns period
+    always #167 clk = ~clk; // Clock: 10ns period
 
     initial begin
         clk = 0;
@@ -169,7 +169,7 @@ module systolic_top_tb;
 
         $display("== Run 2 complete ==");
 
-        #50;
+        #25000;
         $finish;
     end
 
