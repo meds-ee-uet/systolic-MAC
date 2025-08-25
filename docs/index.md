@@ -10,7 +10,7 @@ The documentation is divided into two main sections:
 
 ## User Guide
 
-![Systolic Array Block Diagram](01.png)  
+![Systolic Array Block Diagram](chip_top_level.png)  
 
 - The array takes an **input of 64 bits** and gives an **output of 64 bits**.  
 - This I/O is communicated using the **bidirectional ready-valid protocol**.  
@@ -66,7 +66,7 @@ git clone <your-repo-link>
   - Stores the result within itself.  
   - Passes it downstream.  
 
- *[Video clip placeholder — from presentation slides]*  
+
 
 ---
 
@@ -107,7 +107,7 @@ y += (a * b);
 - General CPUs are used in **Von Neumann architecture**, but **digital signal processors (DSPs)** use **MACs**.  
 - The hardware unit that performs the operation is known as a **Multiplier–Accumulator (MAC Unit)**.  
 
-![MAC Unit](mac_unit.png)  <!-- Replace mac_unit.png with your actual file -->
+![MAC Unit](MAC_UNIT.png)  <!-- Replace mac_unit.png with your actual file -->
 
 ## 2. Processing Elements / Data Processing Units
 
@@ -119,7 +119,7 @@ y += (a * b);
 - PEs are connected to their neighbors in a regular pattern, allowing data to **flow step by step**.  
 - Together, many PEs work in parallel to achieve high throughput in matrix and vector computations.  
 
-![Processing Element](processing_element.png)  <!-- Replace processing_element.png with your actual file -->
+![Processing Element](PE.png)  <!-- Replace processing_element.png with your actual file -->
 
 ## 3. Systolic Array
 
@@ -129,7 +129,7 @@ y += (a * b);
   - Matrix multiplication  
   - Convolution  
 
-![Systolic Array](systolic_array.png)  <!-- Replace systolic_array.png with your actual file -->
+![Systolic Array](SYSTOLIC.png)  <!-- Replace systolic_array.png with your actual file -->
 
 
 # OUR DESIGN
@@ -150,7 +150,7 @@ y += (a * b);
 ## (1) MAC Unit
 
 ### 1. PinOut
-![MAC Unit PinOut](mac_pinout.png)  <!-- Replace mac_pinout.png with your actual file -->
+![MAC Unit PinOut](MAC-PO(1).png)  <!-- Replace mac_pinout.png with your actual file -->
 
 ### Inputs
 - Takes the following as inputs:  
@@ -166,7 +166,7 @@ y += (a * b);
 
 ### 2. Design Diagram
 
-![MAC Unit Design](mac_design.png)  <!-- Replace mac_design.png with your actual file -->
+![MAC Unit Design](MAC-design(1).png)  <!-- Replace mac_design.png with your actual file -->
 
 ### Explanation
 - First of all, the user enters elements **A** and **B**.  
@@ -186,7 +186,7 @@ y += (a * b);
 
 ### 3. Register Design
 
-![Register Design](register_design.png)  <!-- Replace register_design.png with your actual file -->
+![Register Design](register-design.png)  <!-- Replace register_design.png with your actual file -->
 
 - This is the **general register design** used for all the registers in our system.  
 - First, a **2×1 MUX** is used, whose output is stored into a register.  
@@ -198,7 +198,7 @@ y += (a * b);
 
 ### 4. State Transition Graph (STG)
 
-![MAC Unit STG](mac_stg.png)  <!-- Replace mac_stg.png with your actual file -->
+![MAC Unit STG](MAC-STG(1).png)  <!-- Replace mac_stg.png with your actual file -->
 
 ### Explanation
 
@@ -235,7 +235,7 @@ y += (a * b);
 ## (2) PROCESSING ELEMENT (PE)
 
 ### PinOut:
-![pe_PO]
+![pe_PO](PE_PO.png)
 
 **Inputs:**
 - `valid`, `reset`, `A_in`, `B_in` as inputs.  
@@ -250,7 +250,7 @@ y += (a * b);
 
 
 ### 2. Design Diagram
-![PE_design]
+![PE_design](PE-Design(1).png)
 
 ### Explanation:
 - **Step 1:** `A_in`, `B_in`, `valid`, and `reset` go to the **MAC unit** and process the same way as explained earlier.  
@@ -288,7 +288,7 @@ y += (a * b);
 ## Counter
 
 ### I. PinOut:
-[add counter-PO]
+![counter-PO](counter-PO(1).png)
 
 **Inputs:**
 - `reset` – Resets the counter.  
@@ -298,7 +298,7 @@ y += (a * b);
 - `en_y` – Goes high when the counter completes **7 counts**.  
 
 ## II. Design Diagram
-![Counter Design](Counter-design.png)
+![Counter Design](counter-design.png)
 
 ### Explanation
 - The input signal (`done`) is added to the previous result.  
@@ -325,7 +325,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 
 ### 2. PinOut
-[add data_feeder_PO]
+![add data_feeder_PO](data_feeder_PO.png)
 
 **Inputs:**
 - `data_in` – 56-bit input row/column data.  
@@ -338,7 +338,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 
 ### 3. Design Diagram
-![Data Feeder Design](data-feeder-design.png)  <!-- Replace with your actual file -->
+![Data Feeder Design](data_feeder_design.png)  <!-- Replace with your actual file -->
 
 ### Explanation
 - The `in_width` (i.e., `data_in`) is stored in a **register** whenever `load` is high and `reset` is off.  
@@ -351,7 +351,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 ### (4) Systolic Top
 
-![Systolic Top](systolic_top)  <!-- Replace with your actual image -->
+![Systolic Top](systolic_top_1.png)  <!-- Replace with your actual image -->
 
 - This is how our **Systolic Array Top** looks after connecting all the **Processing Elements** and **Data Feeders**.  
 - To use this array, a **proper interface** is required, which is explained in the following sections.  
@@ -361,7 +361,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ### (5) Interface
 
 #### 1. Interface Draft
-![Interface Draft](interface_draft)  <!-- Replace with your actual image -->
+![Interface Draft](interface_draft.png)  <!-- Replace with your actual image -->
 
 #### Explanation
 
@@ -379,7 +379,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ### 1. READY-VALID PROTOCOL
 
 #### PinOut
-[add rv-PO]
+![rv-PO](RV_PO.png)
 
 **Inputs:**
 - `ready` – Indicates that the receiver is ready to accept data.  
@@ -391,7 +391,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 - `tx_done` – Goes high whenever `data_out` is successfully transmitted.  
 
 ### Design Diagram
-![RV Design](rv_design)  <!-- Replace with your actual image -->
+![RV Design](RV-design.png)  <!-- Replace with your actual image -->
 
 ### Explanation
 - Whenever **valid** becomes high, `data_in` is received.  
@@ -411,7 +411,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 - The delay register ensures `tx_done` aligns with the exact cycle when `data_out` is valid, confirming the output data is ready.  
 
 ### State Transition Graph (STG)
-![RV STG](rv_stg)  <!-- Replace with your actual image -->
+![RV STG](RV_STG(3).png)  <!-- Replace with your actual image -->
 
 ### Explanation
 
@@ -431,7 +431,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ### 2. INPUT MANAGER
 
 #### PinOut
-[add input_manager_PO]
+![add input_manager_PO](input_manager_PO(2).png)
 
 **Inputs:**
 - `data_in` – 64-bit input data.  
@@ -451,7 +451,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ### 3. OUTPUT MANAGER
 
 #### PinOut
-[add output_manager_PO]
+![add output_manager_PO](output_manager_PO(2).png)
 
 **Inputs:**
 - `load` – Signal to load the input data.  
@@ -464,7 +464,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 
 ### Design Diagram
-[add output_manager_design]
+![add output_manager_design](output_manager_design(2).png)
 
 ### Explanation
 - The **Systolic Array** produces **512 bits** output (16 PEs × 32 bits each).  
@@ -480,7 +480,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ---
 
 ## (6) Systolic Array
-![Systolic Array](systolic_copy)  <!-- Replace with your actual image -->
+![Systolic Array](systolic_copy(2).png)  <!-- Replace with your actual image -->
 
 ### Main Parts of the Systolic Array
 Our final **Systolic Array** consists of three main parts:
@@ -493,7 +493,7 @@ Our final **Systolic Array** consists of three main parts:
 ## EXPLANATION
 
 ### 1. Input DataPath
-![Input Datapath](input_datapath)  <!-- Replace with your cropped image -->
+![Input Datapath](input_datapath.png)  <!-- Replace with your cropped image -->
 
 ### Explanation
 - The user provides a **64-bit input**, which first enters the **Ready–Valid Protocol (RV_1)**.  
@@ -534,7 +534,7 @@ Our final **Systolic Array** consists of three main parts:
 ---
 
 ### 2. Systolic Top
-![Systolic Top](systolic_top)  <!-- Replace with your cropped image -->
+![Systolic Top](systolic_top_1.png)  <!-- Replace with your cropped image -->
 
 ### Explanation
 - The **four rows** and **four columns** are fed into the **data feeders**, which pass them to the **Processing Elements (PEs)** as described earlier.  
@@ -551,7 +551,7 @@ Our final **Systolic Array** consists of three main parts:
 ---
 
 ### 3. Output DataPath
-![Output DataPath](output_datapath)  <!-- Replace with your cropped image -->
+![Output DataPath](output_datapath.png)  <!-- Replace with your cropped image -->
 
 ### Explanation
 - The **512-bit `y`** from the Systolic Top is first stored in a **buffer** (simple register), which outputs the stored value in the next cycle.  
@@ -585,7 +585,7 @@ Our final **Systolic Array** consists of three main parts:
 ### COUNTER
 
 #### PinOut
-[add controlled_counter_PO]
+![controlled_counter_PO](controlled_counter_PO(2).png)
 
 **Inputs:**
 - `enable` – Starts the counting process.  
@@ -596,7 +596,7 @@ Our final **Systolic Array** consists of three main parts:
 
 
 ### Design Diagram
-[add controlled_counter_design]
+![add controlled_counter_design](controlled_counter_design(2).png)
 
 ### Explanation
 
@@ -630,11 +630,11 @@ Our final **Systolic Array** consists of three main parts:
 
 #### Design Diagram
 We have connected all three main parts to get the overall **final Systolic Array** as shown below:  
-[add systolic_copy pic]  <!-- Replace with your actual image -->
+![systolic_copy pic](systolic_copy(2).png)  <!-- Replace with your actual image -->
 
 
 ### State Transition Graph (STG) of Controller
-![Modified STG Systolic](modified_STG_systolic)  <!-- Replace with your image -->
+![Modified STG Systolic](systolic_STG.png)  <!-- Replace with your image -->
 
 ### Explanation of States
 
