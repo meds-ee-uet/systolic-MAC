@@ -528,7 +528,7 @@ Our final **Systolic Array** consists of three main parts:
 - These values are finally fed into the **data feeders** of the Systolic Array.  
 
 ### Simulations
-![ModelSim waveform of Input Datapath](input_datapath_waveform)  <!-- Replace with your waveform image -->
+![ModelSim waveform of Input Datapath](input_datapath_sim.png)  <!-- Replace with your waveform image -->
 
 
 ---
@@ -544,8 +544,6 @@ Our final **Systolic Array** consists of three main parts:
   - This output is referred to as **`y`**.  
 - The **512-bit `y`** is then passed to the **Output Datapath**, where it is organized into **eight 64-bit chunks**, forming the final output. (Because `64 × 8 = 512`)  
 
-### Simulations
-![ModelSim waveform of Systolic Top](systolic_top_waveform)  <!-- Replace with your waveform image -->
 
 
 ---
@@ -577,7 +575,7 @@ Our final **Systolic Array** consists of three main parts:
   - Once all shifts are completed, `sh_count_done` is asserted → indicates **entire computation and output transfer complete**.  
 
 ### Simulations
-![ModelSim waveform of Output DataPath](output_datapath_waveform)  <!-- Replace with your waveform image -->
+![ModelSim waveform of Output DataPath](output_datapath_sim.png)  <!-- Replace with your waveform image -->
 
 
 ---
@@ -642,7 +640,16 @@ We have connected all three main parts to get the overall **final Systolic Array
 
 ---
 
-### (7) RESULT
+### (7) TESTING
+
+We tested by two examples , and got the correct result :
+
+### Simulation:
+
+![systolic_top](systolic_sim.png)
+
+---
+### (8) RESULT
 
 # PENDING
 
