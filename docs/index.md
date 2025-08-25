@@ -66,7 +66,7 @@ git clone <your-repo-link>
   - Stores the result within itself.  
   - Passes it downstream.  
 
-📽️ *[Video clip placeholder — from presentation slides]*  
+ *[Video clip placeholder — from presentation slides]*  
 
 ---
 
@@ -248,4 +248,407 @@ y += (a * b);
 - `valid_out` goes high whenever the overall PE operation completes.  
 - `y_out` is the 32-bit output of the PE.  
 
+
+### 2. Design Diagram
+![PE_design]
+
+### Explanation:
+- **Step 1:** `A_in`, `B_in`, `valid`, and `reset` go to the **MAC unit** and process the same way as explained earlier.  
+- **Step 2:** From the MAC unit, we get `y` and `done` as outputs.  
+  - `done` indicates that the MAC process has been completed.  
+  - This `done` signal is passed through a **counter** (design explained below).  
+  - When the counter registers **7 occurrences of `done`**, the `valid_out` flag becomes high, showing that the PE’s computations are complete.  
+- **Step 3:** The `valid_out` also connects to a register. When we get **7 outputs of `y`** from the MAC unit, it confirms that the PE’s calculations are finished, and finally, `y_out` (32 bits) is produced.  
+
+---
+
+#### Why count 7 times?  
+- In the **Systolic Array Architecture**, after padding, the last row and last column expand into **7 elements**:  
+  - 4 actual elements  
+  - 3 padded zeros  
+- Therefore, we must count **7 `done` signals** to ensure that the row/column computation has finished correctly.  
+
+---
+
+#### Role of `A_out` and `B_out`  
+- Whenever the `done` signal goes high, `A_in` and `B_in` are stored in `reg_A` and `reg_B`.  
+- These values then propagate outward as `A_out` and `B_out`.  
+
+---
+
+#### Why are `A_out` and `B_out` needed?  
+- In the systolic array, each PE must process **7 elements per row/column**.  
+- In a **4×4 systolic array**, there are **16 Processing Elements (PEs)** working in parallel.  
+- To enable this **parallel pipelined computation**, each PE forwards `A_out` and `B_out` to its neighbors.  
+- This design ensures faster computations by reducing the number of cycles required.  
+
+
+---
+
+## Counter
+
+### I. PinOut:
+[add counter-PO]
+
+**Inputs:**
+- `reset` – Resets the counter.  
+- `done` – Input pulse that needs to be counted.  
+
+**Outputs:**
+- `en_y` – Goes high when the counter completes **7 counts**.  
+
+## II. Design Diagram
+![Counter Design](Counter-design.png)
+
+### Explanation
+- The input signal (`done`) is added to the previous result.  
+- The **previous result** is selected by a **Mux**.  
+- The **selector pin** of the Mux is driven by the **OR** of `reset` and `en_y`.  
+  - If `reset` is high **or** `en_y` is high (count complete), the Mux passes **zero**.  
+  - Otherwise, it passes the actual input to be stored in the **register**.  
+- A **comparator** checks each result.  
+- When the count reaches **7**, the comparator output goes high, raising `en_y`.  
+
+
+---
+
+### (3) Data Feeders  
+
+**1. Why we used them?**  
+We have already described the processing element. Now, since we are using a **4×4 systolic array**, a total of **16 processing elements** will be used.  
+
+- Each processing element takes **8-bit input**.  
+- However, we have **7 elements** in a row/column (as per the systolic array architecture).  
+- This makes it **7 × 8 = 56 bits**.  
+
+A simple solution is to use **data feeders**, in which we feed **56-bit row/column** data and get **8-bit elements** by shifting them one by one, which are then fed to the respective registers.  
+
+
+### 2. PinOut
+[add data_feeder_PO]
+
+**Inputs:**
+- `data_in` – 56-bit input row/column data.  
+- `load` – Load signal to initialize the feeder.  
+- `shift` – Shift signal to move data one element at a time.  
+- `reset` – Resets the internal state of the feeder.  
+
+**Outputs:**
+- `data_out` – 8-bit output element, fed to the respective registers.  
+
+
+### 3. Design Diagram
+![Data Feeder Design](data-feeder-design.png)  <!-- Replace with your actual file -->
+
+### Explanation
+- The `in_width` (i.e., `data_in`) is stored in a **register** whenever `load` is high and `reset` is off.  
+- When the **shift** signal is high, the register shifts data from the **Most Significant Bit (MSB)**.  
+- This process produces **seven 8-bit chunks**, which are then fed to the **Processing Elements** as individual elements of a row/column.  
+- These seven 8-bit chunks form the **out_width**, which corresponds to `data_out`.  
+
+---
+
+
+### (4) Systolic Top
+
+![Systolic Top](systolic_top)  <!-- Replace with your actual image -->
+
+- This is how our **Systolic Array Top** looks after connecting all the **Processing Elements** and **Data Feeders**.  
+- To use this array, a **proper interface** is required, which is explained in the following sections.  
+
+---
+
+### (5) Interface
+
+#### 1. Interface Draft
+![Interface Draft](interface_draft)  <!-- Replace with your actual image -->
+
+#### Explanation
+
+# PENDING
+
+**Main Parts of Interface:**
+1. **Ready-Valid Protocol**  
+2. **Input Manager**  
+3. **Output Manager**  
+
+
+---
+## EXPLANATION
+
+### 1. READY-VALID PROTOCOL
+
+#### PinOut
+[add rv-PO]
+
+**Inputs:**
+- `ready` – Indicates that the receiver is ready to accept data.  
+- `valid` – Indicates that the sender has valid data.  
+- `data_in` – 64-bit input data.  
+
+**Outputs:**
+- `data_out` – 64-bit output data.  
+- `tx_done` – Goes high whenever `data_out` is successfully transmitted.  
+
+### Design Diagram
+![RV Design](rv_design)  <!-- Replace with your actual image -->
+
+### Explanation
+- Whenever **valid** becomes high, `data_in` is received.  
+- When both **valid** and **ready** are high:  
+  - `en_data_Tx` goes high → handshaking occurs.  
+  - `data_out` is produced in the next cycle (64 bits).  
+- `tx_done` signal goes high whenever the respective `data_out` is available.  
+
+#### How does `tx_done` work?
+- `en_data_Tx` goes high when handshaking occurs.  
+- A **multiplexer (MUX)** uses `en_data_Tx` as the select signal.  
+  - When `en_data_Tx = 1`, the MUX outputs 1.  
+  - This output passes through a **delay register**, producing `tx_done` in the next clock cycle.  
+
+#### Why use a delay register?
+- Without the delay register, `tx_done` would assert **one cycle earlier** than the availability of `data_out`.  
+- The delay register ensures `tx_done` aligns with the exact cycle when `data_out` is valid, confirming the output data is ready.  
+
+### State Transition Graph (STG)
+![RV STG](rv_stg)  <!-- Replace with your actual image -->
+
+### Explanation
+
+#### I. IDLE
+- On **reset**, the system enters the **IDLE** state.  
+- If either `valid` or `ready` is low, the system **remains in IDLE**.  
+- When both `valid` and `ready` are high, **handshaking occurs**, and the system transitions to the **Tx** state.  
+
+#### II. Tx
+- In this state, `valid` and `ready` being high indicate that **handshaking has occurred**.  
+- The `en_data_Tx` signal is asserted (goes high), initiating the **data transfer**.  
+- Immediately after this, the system **returns to the IDLE** state.  
+
+
+---
+
+### 2. INPUT MANAGER
+
+#### PinOut
+[add input_manager_PO]
+
+**Inputs:**
+- `data_in` – 64-bit input data.  
+- `next_row` – Signal to indicate the next row of the matrix.  
+- `next_col` – Signal to indicate the next column of the matrix.  
+
+**Outputs:**
+- `A_r1`, `A_r2`, `A_r3`, `A_r4` – 56-bit outputs for rows 1 to 4.  
+- `B_c1`, `B_c2`, `B_c3`, `B_c4` – 56-bit outputs for columns 1 to 4.  
+  - Each row/column has **7 elements**, and each element is **8 bits** → 7 × 8 = 56 bits.  
+
+**Working:**  
+- The Input Manager is **combined with the input datapath**, which is explained in the following section.  
+
+---
+
+### 3. OUTPUT MANAGER
+
+#### PinOut
+[add output_manager_PO]
+
+**Inputs:**
+- `load` – Signal to load the input data.  
+- `shift` – Signal to shift the data.  
+- `reset` – Resets the internal state of the output manager.  
+- `data_in` – 512-bit input data (`y` from processing elements).  
+
+**Outputs:**
+- `data_out` – 64-bit output data, produced **eight times** from the 512-bit input.  
+
+
+### Design Diagram
+[add output_manager_design]
+
+### Explanation
+- The **Systolic Array** produces **512 bits** output (16 PEs × 32 bits each).  
+- These 512 bits serve as `data_in`/`y` for the **Output Manager**.  
+- The Output Manager acts like a **data feeder**, mainly implemented as a **shift register**.  
+- The **first 64 bits** are taken from the **MSB side** when `load` is high.  
+- For the remaining seven 64-bit chunks:  
+  - Wait for the `shift` signal.  
+  - Each time `shift` goes high, the next 64-bit chunk is produced as `data_out`.  
+- In this way, the **eight 64-bit outputs** are obtained sequentially.  
+
+
+---
+
+## (6) Systolic Array
+![Systolic Array](systolic_copy)  <!-- Replace with your actual image -->
+
+### Main Parts of the Systolic Array
+Our final **Systolic Array** consists of three main parts:
+
+1. **Input Datapath**  
+2. **Systolic Top**  
+3. **Output Datapath**  
+
+---
+## EXPLANATION
+
+### 1. Input DataPath
+![Input Datapath](input_datapath)  <!-- Replace with your cropped image -->
+
+### Explanation
+- The user provides a **64-bit input**, which first enters the **Ready–Valid Protocol (RV_1)**.  
+- When both `src_valid` and `dest_ready` are high, **handshaking occurs**, producing:  
+  - `protocol_out` → the same 64-bit input  
+  - `tx1_done` → generated in the next cycle  
+
+- The 64-bit `protocol_out` is passed to the **Output Manager**, where it is split into two 32-bit parts:  
+  - `[63:32]` → row data  
+  - `[31:0]` → column data  
+
+- **Row_count** and **col_count** act as enables for registers `reg_ri` and `reg_cj` (`i,j = 0 to 3`)  
+
+- **First row/column:**  
+  - `row_count = col_count = 0` → stored in `reg_r1` and `reg_c1`  
+
+- **Subsequent rows/columns:**  
+  - When `next_row` and `next_col` go high, `row_count` and `col_count` increment.  
+  - Values are stored in `reg_r2`/`reg_c2`, `reg_r3`/`reg_c3`, and `reg_r4`/`reg_c4`.  
+
+- When `row_count` and `col_count = 3`, all **four rows and columns** are captured.  
+  - `load_in_done` signal is asserted → indicates all inputs have been successfully loaded  
+
+- **Registers holding the values:**  
+  - Rows: `reg_r1`, `reg_r2`, `reg_r3`, `reg_r4`  
+  - Columns: `reg_c1`, `reg_c2`, `reg_c3`, `reg_c4`  
+
+- **56-bit outputs generated from registers:**  
+  - Rows: `A_r1`, `A_r2`, `A_r3`, `A_r4`  
+  - Columns: `B_c1`, `B_c2`, `B_c3`, `B_c4`  
+
+- These values are finally fed into the **data feeders** of the Systolic Array.  
+
+### Simulations
+![ModelSim waveform of Input Datapath](input_datapath_waveform)  <!-- Replace with your waveform image -->
+
+
+---
+
+### 2. Systolic Top
+![Systolic Top](systolic_top)  <!-- Replace with your cropped image -->
+
+### Explanation
+- The **four rows** and **four columns** are fed into the **data feeders**, which pass them to the **Processing Elements (PEs)** as described earlier.  
+- Each PE produces a **32-bit output (`y_out`)**.  
+- Using a **4×4 systolic array**, there are **16 PEs**, resulting in a combined output of:  
+  - `16 × 32 = 512 bits`  
+  - This output is referred to as **`y`**.  
+- The **512-bit `y`** is then passed to the **Output Datapath**, where it is organized into **eight 64-bit chunks**, forming the final output. (Because `64 × 8 = 512`)  
+
+### Simulations
+![ModelSim waveform of Systolic Top](systolic_top_waveform)  <!-- Replace with your waveform image -->
+
+
+---
+
+### 3. Output DataPath
+![Output DataPath](output_datapath)  <!-- Replace with your cropped image -->
+
+### Explanation
+- The **512-bit `y`** from the Systolic Top is first stored in a **buffer** (simple register), which outputs the stored value in the next cycle.  
+- This 512-bit data is then sent to the **Output Manager**, where it waits for the **load** signal.  
+
+- When **load** is asserted:  
+  - The **first 64 bits** (from the MSB side) are sent to the **Ready–Valid Protocol (RV_2)**.  
+  - When both `dest_valid` and `src_ready` are high in RV_2, **handshaking occurs**:  
+    - `final_data_out` → first 64-bit output chunk  
+    - `tx2_done` → asserted to indicate successful transfer  
+
+- After the first `final_data_out`:  
+  - The **shift** signal from the Output Manager is asserted.  
+  - The next 64-bit chunk is shifted out and sent to **RV_2**.  
+  - Handshaking occurs again → second 64-bit `final_data_out` with `tx2_done`.  
+
+- This process continues:  
+  - A total of **7 shifts** occur → 8 final outputs of 64 bits each.  
+  - Since `8 × 64 = 512`, the entire Systolic Array output is successfully transferred.  
+
+- The **7 shift events** are monitored by a **Counter**:  
+  - Counts up to 7 shifts.  
+  - Once all shifts are completed, `sh_count_done` is asserted → indicates **entire computation and output transfer complete**.  
+
+### Simulations
+![ModelSim waveform of Output DataPath](output_datapath_waveform)  <!-- Replace with your waveform image -->
+
+
+---
+
+### COUNTER
+
+#### PinOut
+[add controlled_counter_PO]
+
+**Inputs:**
+- `enable` – Starts the counting process.  
+- `reset` – Resets the counter to its initial state.  
+
+**Outputs:**
+- `count_done` – Goes high when counting is complete.  
+
+
+### Design Diagram
+[add controlled_counter_design]
+
+### Explanation
+
+#### Reset Phase
+- When `rst = 1`:  
+  - The counter (`count`) is cleared to **0**.  
+  - `count_done` signal is also cleared to **0**.  
+
+#### Normal Operation (when `rst = 0`)
+- On every **posedge of clk**, the counter checks the `enable` signal:  
+  - If `enable = 0` → counter holds its current value (no change).  
+  - If `enable = 1`:  
+    - The counter **increments by 1**.  
+    - While `count < count_limit - 1`:  
+      - Only `count` updates  
+      - `count_done` remains **0**  
+    - When `count = count_limit`:  
+      - `count_done` asserts (**1**) for **one clock cycle**  
+      - The counter immediately **resets back to 0**  
+
+#### Key Behavior
+- Counts **clock cycles** when enabled.  
+- After completing `count_limit` cycles, it raises a **1-cycle done pulse** (`count_done`).  
+- The process **repeats** as long as `enable` remains asserted.  
+
+
+
+---
+
+### FINAL SYSTOLIC ARRAY
+
+#### Design Diagram
+We have connected all three main parts to get the overall **final Systolic Array** as shown below:  
+[add systolic_copy pic]  <!-- Replace with your actual image -->
+
+
+### State Transition Graph (STG) of Controller
+![Modified STG Systolic](modified_STG_systolic)  <!-- Replace with your image -->
+
+### Explanation of States
+
+# PENDING
+
+---
+
+### (7) RESULT
+
+# PENDING
+
+#### 1. Simulations
+
+
+#### 2. BenchMark
+# PENDING
 
