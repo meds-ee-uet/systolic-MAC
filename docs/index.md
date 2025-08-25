@@ -528,7 +528,7 @@ Our final **Systolic Array** consists of three main parts:
 - These values are finally fed into the **data feeders** of the Systolic Array.  
 
 ### Simulations
-![ModelSim waveform of Input Datapath](input_datapath_sim.png)  <!-- Replace with your waveform image -->
+![ModelSim waveform of Input Datapath](./input_datapath_sim.png)  <!-- Replace with your waveform image -->
 
 
 ---
@@ -646,7 +646,7 @@ We tested by two examples , and got the correct result :
 
 ### Simulation:
 
-![systolic_top](systolic_sim.png)
+![systolic_top](./systolic_sim.png)
 
 ---
 ### (8) RESULT
