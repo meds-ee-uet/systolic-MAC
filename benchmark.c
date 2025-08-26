@@ -1,47 +1,55 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 #define N 4
+#define REPEAT 10  // number of repetitions
 
 int main() {
-    int A[N][N] = {
-        {4, 7, 1, 6},
-        {0, 2, 3, 8},
-        {5, 9, 4, 2},
-        {6, 3, 7, 1}
-    };
-
-    int B[N][N] = {
-        {3, 8, 6, 2},
-        {1, 7, 5, 9},
-        {4, 0, 2, 3},
-        {7, 5, 1, 4}
-    };
-
-    int C[N][N] = {0};
-
+    int A[N][N], B[N][N], C[N][N];
     struct timespec start, end;
 
-    // Record start time
-    clock_gettime(CLOCK_MONOTONIC, &start);
+    // Seed random number generator
+    srand(time(NULL));
 
-    // Matrix multiplication
+    // Fill A and B with random values 0–9
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
-            for (int k = 0; k < N; k++) {
-                C[i][j] += A[i][k] * B[k][j];
+            A[i][j] = rand() % 1000;
+            B[i][j] = rand() % 1000;
+        }
+    }
+
+    // Start timing
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    for (int r = 0; r < REPEAT; r++) {
+        // Reset C
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                C[i][j] = 0;
+            }
+        }
+
+        // Multiply A and B
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                for (int k = 0; k < N; k++) {
+                    C[i][j] += A[i][k] * B[k][j];
+                }
             }
         }
     }
 
-    // Record end time
+    // End timing
     clock_gettime(CLOCK_MONOTONIC, &end);
 
-    // Calculate time in nanoseconds
     long ns = (end.tv_sec - start.tv_sec) * 1000000000L +
               (end.tv_nsec - start.tv_nsec);
 
-    // Print matrices and result
+    double avg_time = (double) ns / REPEAT;
+
+    // Print matrices
     printf("Matrix A:\n");
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -66,7 +74,8 @@ int main() {
         printf("\n");
     }
 
-    printf("\nTime taken: %ld ns\n", ns);
+    printf("\nTotal time for %d multiplications: %ld ns\n", REPEAT, ns);
+    printf("Average time per multiplication: %.2f ns\n", avg_time);
 
     return 0;
 }
