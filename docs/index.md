@@ -106,7 +106,7 @@ y += (a * b);
 - General CPUs are used in **Von Neumann architecture**, but **digital signal processors (DSPs)** use **MACs**.  
 - The hardware unit that performs the operation is known as a **Multiplier–Accumulator (MAC Unit)**.  
 
-![MAC Unit](MAC_UNIT.png)  <!-- Replace mac_unit.png with your actual file -->
+![MAC Unit Interface](MAC_UNIT.png)  <!-- Replace mac_unit.png with your actual file -->
 
 ## 2. Processing Elements / Data Processing Units
 
