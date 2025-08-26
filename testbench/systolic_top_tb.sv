@@ -108,7 +108,7 @@ module systolic_top_tb;
         end
         $display("== Run 1 complete ==");
 
-
+        final_data_out = 0;
 
         repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
 
@@ -169,12 +169,286 @@ module systolic_top_tb;
         // Read outputs for second run
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
-                 
+            wait(final_data_out);
+            @(posedge clk);
+            src_ready = 0;
         end
 
         $display("== Run 2 complete ==");
 
-        #25000;
+
+        final_data_out = 0;
+
+        repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
+
+
+        //third example
+        $display("\n== Starting Run 3 with negative integers ==");
+        @(posedge clk);
+        valid_in = 1;
+        @(posedge clk);
+        valid_in = #1 0;
+
+        // First chunk
+        data_in = {
+            8'd23,  8'd54,  -8'd65,  8'd32,
+            8'd23,  -8'd73,  8'd92,  8'd1
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Second chunk
+        data_in = {
+            -8'd73,  8'd37,  -8'd37,  8'd37,
+            8'd59, -8'd37,  8'd61, 8'd2
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Third chunk
+        data_in = {
+            8'd92,  8'd68, 8'd31, 8'd30,
+            8'd65,  8'd37, 8'd31, -8'd3
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Fourth chunk
+        data_in = {
+            -8'd1, -8'd2, 8'd3, 8'd9,
+            8'd32,  8'd37,  -8'd30, 8'd9
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Read outputs for second run
+        for (int i = 0; i < 16; i++) begin
+            src_ready = 1;
+            wait(final_data_out);
+            @(posedge clk);
+            src_ready = 0;
+         
+        end
+
+        $display("== Run 3 complete ==");
+
+        final_data_out = 0;
+
+
+        repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
+
+
+        //fourth example
+        $display("\n== Starting Run 4 with negative integers ==");
+        @(posedge clk);
+        valid_in = 1;
+        @(posedge clk);
+        valid_in = #1 0;
+
+        // First chunk
+        data_in = {
+            8'd23,  8'd54,  -8'd65,  8'd32,
+            8'd23,  -8'd73,  8'd92,  8'd1
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Second chunk
+        data_in = {
+            -8'd73,  8'd37,  -8'd37,  8'd37,
+            8'd54, -8'd37,  8'd61, 8'd2
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Third chunk
+        data_in = {
+            8'd92,  -8'd61, -8'd56, 8'd30,
+            8'd65,  8'd37, 8'd31, -8'd3
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Fourth chunk
+        data_in = {
+            -8'd1, -8'd2, 8'd3, 8'd9,
+            8'd9,  8'd37,  -8'd30, 8'd9
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Read outputs for second run
+        for (int i = 0; i < 16; i++) begin
+            src_ready = 1;
+            wait(final_data_out);
+            @(posedge clk);
+            src_ready = 0;
+        end
+
+        $display("== Run 4 complete ==");
+
+        final_data_out = 0;
+
+
+        repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
+
+
+        //fifth example
+         $display("\n== Starting Run 5 with negative integers ==");
+        @(posedge clk);
+        valid_in = 1;
+        @(posedge clk);
+        valid_in = #1 0;
+
+        // First chunk
+        data_in = {
+            8'd23,  8'd54,  -8'd65,  8'd32,
+            8'd23,  -8'd73,  8'd92,  8'd1
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Second chunk
+        data_in = {
+            -8'd16,  8'd37,  8'd39,  8'd37,
+            8'd54, -8'd37,  8'd61, 8'd2
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Third chunk
+        data_in = {
+            8'd92,  -8'd61, 8'd31, 8'd30,
+            8'd65,  8'd56, 8'd31, -8'd3
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Fourth chunk
+        data_in = {
+            -8'd1, -8'd2, 8'd3, 8'd9,
+            8'd32,  8'd37,  -8'd30, 8'd9
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Read outputs for second run
+        for (int i = 0; i < 16; i++) begin
+            src_ready = 1;
+            wait(final_data_out);
+            @(posedge clk);
+            src_ready = 0;
+                 
+        end
+
+        $display("== Run 5 complete ==");
+
+        final_data_out = 0;
+
+        repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
+
+
+        //sixth example
+         $display("\n== Starting Run 6 with negative integers ==");
+        @(posedge clk);
+        valid_in = 1;
+        @(posedge clk);
+        valid_in = #1 0;
+
+        // First chunk
+        data_in = {
+            8'd25,  8'd54,  -8'd65,  8'd32,
+            8'd23,  -8'd73,  8'd92,  8'd1
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Second chunk
+        data_in = {
+            -8'd73,  8'd37,  -8'd37,  8'd37,
+            8'd54, -8'd37,  8'd61, 8'd2
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Third chunk
+        data_in = {
+            8'd92,  -8'd61, 8'd31, 8'd30,
+            8'd65,  8'd37, 8'd31, -8'd3
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Fourth chunk
+        data_in = {
+            8'd1, -8'd2, 8'd3, 8'd9,
+            8'd32,  8'd65,  -8'd30, 8'd9
+        };
+        @(posedge clk);
+        src_valid = 1;
+        @(posedge clk);
+        src_valid = 0;
+        repeat(3) @(posedge clk);
+
+        // Read outputs for second run
+        for (int i = 0; i < 16; i++) begin
+            src_ready = 1;
+            wait(final_data_out);
+            @(posedge clk);
+            src_ready = 0;
+        end
+
+        $display("== Run 6 complete ==");
+
+
+
+
+      #25000000;
         $finish;
     end
 
