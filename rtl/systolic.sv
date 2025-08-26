@@ -33,7 +33,9 @@ module systolic(
     input logic src_valid,
     input logic src_ready,
     output logic [63:0]  final_data_out,
-    output logic done_matrix_mult
+    output logic done_matrix_mult,
+    output logic tx_one_done,
+    output logic tx_two_done
 );
     logic signed [55:0] A_r [4];
     logic signed [55:0] B_c [4];
@@ -47,8 +49,8 @@ module systolic(
     logic signed [7:0] B_c_out [4];
     logic done [0:3][0:3];
     logic valid_out [0:3][0:3];
-    logic dest_ready,next_col,next_row,load_in_done,tx_one_done;//input_datapath signals
-    logic load_out,dest_valid,shift,tx_two_done,sh_count_done;//output_datapath signals
+    logic dest_ready,next_col,next_row,load_in_done;//input_datapath signals
+    logic load_out,dest_valid,shift,sh_count_done;//output_datapath signals
     logic res_internal;
 
     state_type state, next_state;
