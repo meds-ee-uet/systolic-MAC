@@ -323,7 +323,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 
 ### 2. PinOut
-![add data_feeder_PO](data_feeder_PO.png)
+![data_feeder_PO](data_feeder_PO.png)
 
 **Inputs:**
 - `data_in` – 56-bit input row/column data.  
@@ -349,7 +349,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 ## (4) Systolic Top
 
-![Systolic Top](systolic_top_1.png)  <!-- Replace with your actual image -->
+![Systolic Top picture](systolic_top_1.png)  <!-- Replace with your actual image -->
 
 - This is how our **Systolic Array Top** looks after connecting all the **Processing Elements** and **Data Feeders**.  
 - To use this array, a **proper interface** is required, which is explained in the following sections.  
@@ -475,7 +475,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ---
 
 ## (6) Systolic Array
-![Systolic Array](systolic_copy(2).png)  <!-- Replace with your actual image -->
+![Systolic Array Design](systolic_copy(2).png)  <!-- Replace with your actual image -->
 
 ### Main Parts of the Systolic Array
 Our final **Systolic Array** consists of three main parts:
