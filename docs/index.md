@@ -283,7 +283,7 @@ y += (a * b);
 
 ---
 
-## Counter
+### Counter
 
 ### I. PinOut:
 ![counter-PO](counter-PO(1).png)
@@ -295,7 +295,7 @@ y += (a * b);
 **Outputs:**
 - `en_y` – Goes high when the counter completes **7 counts**.  
 
-## II. Design Diagram
+### II. Design Diagram
 ![Counter Design](counter-design.png)
 
 ### Explanation
