@@ -8,7 +8,7 @@ The documentation is divided into two main sections:
 
 ---
 
-## User Guide
+# User Guide
 
 ![Systolic Array Block Diagram](chip_top_level.png)  
 
@@ -296,7 +296,7 @@ y += (a * b);
 - `en_y` – Goes high when the counter completes **7 counts**.  
 
 ### II. Design Diagram
-![Counter Design](counter-design.png)
+![counter-Design](counter-design.png)
 
 ### Explanation
 - The input signal (`done`) is added to the previous result.  
