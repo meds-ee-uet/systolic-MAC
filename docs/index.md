@@ -49,13 +49,12 @@ The documentation is divided into two main sections:
 
 ## Getting Started
 Clone our repository:
-```bash
-git clone <your-repo-link>
-```
 
-# Developer’s Guide
+git clone [https://systolic-mac.readthedocs.io/en/latest/](https://systolic-mac.readthedocs.io/en/latest/)
 
 ---
+
+# Developer’s Guide
 
 ## Conceptual Overview
 
@@ -132,14 +131,13 @@ y += (a * b);
 ![Systolic Array](SYSTOLIC.png)  <!-- Replace systolic_array.png with your actual file -->
 
 
-# OUR DESIGN
+# DESIGN OVERVIEW
 
 ## Specialty & Performance
 
 - We built the entire **Systolic Array** completely from scratch, covering all modules and interconnections.  
 - On a **3 GHz machine**, the full computation completed in just **~15 ns**.  
-- This results in a performance that is nearly **70× faster** than conventional implementations.  
-
+- This results in a performance that is nearly **50-160** times faster than a general purpose cpu(check the benchmarks section). 
 
 ---
 
@@ -358,14 +356,11 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 ---
 
-### (5) Interface
+### (5) Interface Design
 
-#### 1. Interface Draft
+#### 1. Interface Design Diagram
 ![Interface Draft](interface_draft.png)  <!-- Replace with your actual image -->
 
-#### Explanation
-
-# PENDING
 
 **Main Parts of Interface:**
 1. **Ready-Valid Protocol**  
@@ -635,14 +630,55 @@ We have connected all three main parts to get the overall **final Systolic Array
 ![Modified STG Systolic](systolic_STG.png)  <!-- Replace with your image -->
 
 ### Explanation of States
-
-# PENDING
+#### I.IDLE:
+- In this state, the processor is waiting for the valid_in signal.
+- done_matrix_mult is 0 in this state.
+#### II.RECEIVE:
+- We reach this state when we get valid_in in the IDLE state.
+- The dest_ready is set and we are waiting for a ready/valid handshake to occur.
+- The handshake will occur when we receive the src_valid. It will be indicated by the tx1_done signal.
+- When we receive the tx1_done signal, we will transition to the IN_COUNT state, else we will stay in RECEIVE state. 
+#### III.IN_COUNT:
+- In this state, the dest_ready is set to 0.
+- This state is meant to count the number of tx1_done signals after the first transition.
+- It allows the data to be arranged for loading into the appropriate registers.
+#### IV.LOAD_IN:
+- While the load_in_done sigal is not set, we will move into this state. Meaning that control only moves into this state if the loading operation is incomplete. 
+- In this state, we wait for a cycle so that values get loaded into the appropriate registers. 
+- Then we unconditionally move back to the RECEIVE state for further data. 
+- During this transition to the RECEIVE state, it will set next_row and next_col to 1.
+#### V.FEED:
+- When the load_in_done signal is high in the IN_COUNT state, we transition into this state.
+- In this state, all the load signals of the data feeders are set to 1, and hence it loads in the values and gives out 8-bits (MSBs) of data.
+- After feeding, it unconditionally moves into the processing state, given that valid_o flag is not set.
+- If the valid_o flag is set, we move to the DONE state.
+#### VI.PROCESSING:
+- In this state we wait till the done signals are set.
+- The done signal will indicate the completion of a partial product.
+- After receiving done signal, we move back to the FEED state.
+- While moving into the FEED state, we set the shift signals of the feeders to 1 for a cycle, so that new elements are available to be fed into the chip.
+#### VII.DONE:
+- This state indicates the exit of the control from the systolic array and transitions into the LOAD_OUT state unconditionally. 
+- While doing so, it causes the buffer to be store the value of the computed product.
+#### VIII.LOAD_OUT:
+- This state transitions into the TRANSFER state unconditionally.
+- While this transition, it will set the load of the final feeder to 1 and also set the dest_valid.
+#### IX.TRANSFER:
+- In this state we are waiting for the ready/valid handshake to occur.
+- The handshake only happens when the src_ready signal is received.
+- When it will occur, we will get the tx2_done signal. And we will transition into the SHIFT_COUNT state. During that transition, shift of the datafeeder will be set to 1 for a cycle. The dest_valid is set to 0.
+- Until we get the tx2_done signal, the control will stay in this state.
+- When we get tx2_done signal and also the final_transfer signal, the control jumps back to idle, setting matrix_mult_done to 1 for a cycle, indicating that the final element has been transferred.
+- It also sets next_row and next_col to 1 in order to reset by overflowing their respective counters.
+#### X.SHIFT_COUNT:
+- This state transitions back into the TRANSFER state unconditionally.
+- The dest_valid is set to 1 during transition.
 
 ---
 
 ### (7) TESTING
 
-We tested by two examples , and got the correct result :
+We tested by six examples , two are shown below :
 
 ### Simulation:
 
@@ -650,12 +686,20 @@ We tested by two examples , and got the correct result :
 
 ---
 ### (8) RESULT
+We used a custom benchmark written in C language, which multiplied two randomly generated 8 bit 4x4 matrices into 4x4 32 bit result. We ran it on different processors 6 times and took the average of the findings. The results are shown in the table below.  
 
-# PENDING
+### Benchmarks
+| Processor        | Time (ns) (avg from 6 runs) |
+|------------------|-----------------------------|
+| M1               | 1000                        |
+| i7-1185G7        | 1239                        |
+| i7-1355U         | 715                         |
+| i5-10310U        | 1784                        |
+| i5-6300U         | 2455                        |
+| i7-8665U         | 1792                        |
+| *Systolic @ 3GHz*| *~15 (from simulation)*     |
 
-#### 1. Simulations
+Hence we observe that the systolic array is approximately **50-160** times faster than main-stream general purpose cpus. 
 
-
-#### 2. BenchMark
-# PENDING
+---
 
