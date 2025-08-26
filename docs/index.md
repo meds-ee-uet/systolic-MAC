@@ -369,7 +369,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 
 ---
-## EXPLANATION
+### EXPLANATION
 
 ### 1. READY-VALID PROTOCOL
 
