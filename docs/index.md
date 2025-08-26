@@ -570,7 +570,7 @@ Our final **Systolic Array** consists of three main parts:
   - Once all shifts are completed, `sh_count_done` is asserted → indicates **entire computation and output transfer complete**.  
 
 ### Simulations
-![ModelSim waveform of Output DataPath](output_datapath_sim.png)  <!-- Replace with your waveform image -->
+![ModelSim waveform of Output DataPath](output_datapath_simulation.png)  <!-- Replace with your waveform image -->
 
 
 ---
@@ -682,7 +682,7 @@ We tested by six examples , two are shown below :
 
 ### Simulation:
 
-![systolic_top](./systolic_sim.png)
+![systolic_top](./systolic_simulation.png)
 
 ---
 ### (8) RESULT
