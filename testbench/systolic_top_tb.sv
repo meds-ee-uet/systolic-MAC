@@ -11,6 +11,7 @@ module systolic_top_tb;
     logic [63:0] final_data_out;
     logic signed [31:0] el1;
     logic signed [31:0] el2;
+    logic tx_one_done;
 
     assign el2 = final_data_out[31:0];
     assign el1 = final_data_out[63:32];
@@ -24,7 +25,8 @@ module systolic_top_tb;
         .src_valid(src_valid),
         .src_ready(src_ready),
         .final_data_out(final_data_out),
-        .done_matrix_mult(done_matrix_mult)
+        .done_matrix_mult(done_matrix_mult),
+        .tx_one_done(tx_one_done)
     );
 
     always #167 clk = ~clk; // Clock: 10ns period
@@ -43,7 +45,7 @@ module systolic_top_tb;
         @(posedge clk);
         reset = 0;
 
-        $display("== Starting Run 1 with positive integers ==");
+        $display("== Starting Running Example 1 with positive integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -56,7 +58,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -67,7 +70,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -78,7 +82,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -89,12 +94,14 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-      
-        // Read outputs
+        $display("The resulting Matrix for Example 1 is:");
+
+        // Output DataPath Part
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
             wait(final_data_out);
@@ -108,17 +115,19 @@ module systolic_top_tb;
                 end
             src_ready = 0;
         end
-        $display("== Run 1 complete ==");
+        $display("== Example 1 has been successfully finished ==");
 
         final_data_out = 0;
 
         repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
 
 
+
+
         // ------------------------
         // SECOND RUN (with negative integers too) & NO RESET
         // ------------------------
-        $display("\n== Starting Run 2 with negative integers ==");
+        $display("\n== Starting Running Example 2 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -131,7 +140,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -142,7 +152,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -153,7 +164,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -164,11 +176,13 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Read outputs for second run
+        $display("The resulting Matrix for Example 2 is:");
+
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
             wait(final_data_out);
@@ -182,7 +196,8 @@ module systolic_top_tb;
                 end
             src_ready = 0;
         end
-        $display("== Run 2 complete ==");
+        $display("== Example 2 has been successfully finished ==");
+
 
 
         final_data_out = 0;
@@ -195,7 +210,7 @@ module systolic_top_tb;
         // ------------------------
         // THIRD RUN (with negative integers too) & NO RESET
         // ------------------------
-        $display("\n== Starting Run 3 with negative integers ==");
+        $display("\n== Starting Running Example 3 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -208,7 +223,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -219,7 +235,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -230,7 +247,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -241,11 +259,13 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Read outputs for second run
+        $display("The resulting Matrix for Example 3 is:");
+
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
             wait(final_data_out);
@@ -260,7 +280,7 @@ module systolic_top_tb;
             src_ready = 0;
         end
 
-        $display("== Run 3 complete ==");
+        $display("== Example 3 has been successfully finished ==");
 
         final_data_out = 0;
 
@@ -275,7 +295,7 @@ module systolic_top_tb;
         //-------------------------
         // FOURTH RUN (with negative integers too) & NO RESET
         //-------------------------
-        $display("\n== Starting Run 4 with negative integers ==");
+        $display("\n== Starting Running Example 4 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -288,7 +308,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -299,7 +320,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -310,7 +332,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -321,11 +344,13 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Read outputs for second run
+        $display("The resulting Matrix for Example 4 is:");
+
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
             wait(final_data_out);
@@ -340,7 +365,7 @@ module systolic_top_tb;
             src_ready = 0;
         end
 
-        $display("== Run 4 complete ==");
+        $display("== Example 4 has been successfully finished ==");
 
         final_data_out = 0;
 
@@ -355,7 +380,7 @@ module systolic_top_tb;
         //-------------------------
         // FIFTH RUN (with negative integers too) & NO RESET
         //-------------------------
-        $display("\n== Starting Run 5 with negative integers ==");
+        $display("\n== Starting Running Example 5 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -368,7 +393,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -379,7 +405,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -390,7 +417,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -401,11 +429,14 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Read outputs for second run
+        $display("The resulting Matrix for Example 5 is:");
+
+
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
             wait(final_data_out);
@@ -420,7 +451,7 @@ module systolic_top_tb;
             src_ready = 0;
         end
 
-        $display("== Run 5 complete ==");
+        $display("== Example 5 has been successfully finished ==");
 
         final_data_out = 0;
 
@@ -434,7 +465,7 @@ module systolic_top_tb;
         //-------------------------
         // SIXTH RUN (with negative integers too) & NO RESET
         //-------------------------       
-        $display("\n== Starting Run 6 with negative integers ==");
+        $display("\n== Starting Running Example 6 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -447,7 +478,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -458,7 +490,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -469,7 +502,8 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
@@ -480,11 +514,14 @@ module systolic_top_tb;
         };
         @(posedge clk);
         src_valid = 1;
-        @(posedge clk);
+        @(posedge tx_one_done);
+        //@(posedge clk);
         src_valid = 0;
         repeat(3) @(posedge clk);
 
-        // Read outputs for second run
+        $display("The resulting Matrix for Example 6 is:");
+
+
         for (int i = 0; i < 16; i++) begin
             src_ready = 1;
             wait(final_data_out);
@@ -499,7 +536,7 @@ module systolic_top_tb;
             src_ready = 0;
         end
 
-        $display("== Run 6 complete ==");
+        $display("== Example 6 has been successfully finished ==");
         final_data_out = 0;
 
       #25000000;
