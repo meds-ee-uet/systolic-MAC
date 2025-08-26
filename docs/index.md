@@ -88,7 +88,7 @@ Support high-throughput matrix operations for channel equalization and beamformi
 
 ## Main Parts of a Systolic Array
 
-### 1. MAC Unit
+## 1. MAC Unit
 - In computing, especially digital signal processing, the **Multiply–Accumulate (MAC)** or **Multiply–Add (MAD)** operation is a common step that:  
   - Computes the product of two numbers.  
   - Adds that product to an accumulator.  
@@ -310,7 +310,7 @@ y += (a * b);
 
 ---
 
-### (3) Data Feeders  
+## (3) Data Feeders  
 
 **1. Why we used them?**  
 We have already described the processing element. Now, since we are using a **4×4 systolic array**, a total of **16 processing elements** will be used.  
@@ -347,7 +347,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 ---
 
 
-### (4) Systolic Top
+## (4) Systolic Top
 
 ![Systolic Top](systolic_top_1.png)  <!-- Replace with your actual image -->
 
@@ -356,7 +356,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 ---
 
-### (5) Interface Design
+## (5) Interface 
 
 #### 1. Interface Design Diagram
 ![Interface Draft](interface_draft.png)  <!-- Replace with your actual image -->
@@ -485,7 +485,7 @@ Our final **Systolic Array** consists of three main parts:
 3. **Output Datapath**  
 
 ---
-## EXPLANATION
+### EXPLANATION
 
 ### 1. Input DataPath
 ![Input Datapath](input_datapath.png)  <!-- Replace with your cropped image -->
@@ -619,7 +619,7 @@ Our final **Systolic Array** consists of three main parts:
 
 ---
 
-### FINAL SYSTOLIC ARRAY
+## FINAL SYSTOLIC ARRAY
 
 #### Design Diagram
 We have connected all three main parts to get the overall **final Systolic Array** as shown below:  
@@ -676,7 +676,7 @@ We have connected all three main parts to get the overall **final Systolic Array
 
 ---
 
-### (7) TESTING
+## (7) TESTING
 
 We tested by six examples , two are shown below :
 
@@ -685,10 +685,10 @@ We tested by six examples , two are shown below :
 ![systolic_top](./systolic_simulation.png)
 
 ---
-### (8) RESULT
+## (8) RESULT
 We used a custom benchmark written in C language, which multiplied two randomly generated 8 bit 4x4 matrices into 4x4 32 bit result. We ran it on different processors 6 times and took the average of the findings. The results are shown in the table below.  
 
-### Benchmarks
+## Benchmarks
 | Processor        | Time (ns) (avg from 6 runs) |
 |------------------|-----------------------------|
 | M1               | 1000                        |
