@@ -42,8 +42,9 @@ module systolic_top_tb;
         // ------------------------
         @(posedge clk);
         reset = 0;
-        @(posedge clk);
 
+        $display("== Starting Run 1 with positive integers ==");
+        @(posedge clk);
         valid_in = 1;
         @(posedge clk);
         valid_in = #1 0;
@@ -99,10 +100,11 @@ module systolic_top_tb;
             wait(final_data_out);
             @(posedge clk);
             if (i < 4) begin
+                $write("[ ");
                 for (int j = 0; j < 4; j++) begin
-                    $display(" Element at row # %0d and column # %0d = %0d",  
-                            i+1, j+1, dut.y_o[i][j]);
-                    end
+                    $write("%0d ", dut.y_o[i][j]);
+                end
+                $write("]\n");
                 end
             src_ready = 0;
         end
@@ -172,14 +174,14 @@ module systolic_top_tb;
             wait(final_data_out);
             @(posedge clk);
             if (i < 4) begin
+                $write("[ ");
                 for (int j = 0; j < 4; j++) begin
-                    $display(" Element at row # %0d and column # %0d = %0d",  
-                            i+1, j+1, dut.y_o[i][j]);
-                    end
+                    $write("%0d ", dut.y_o[i][j]);
+                end
+                $write("]\n");
                 end
             src_ready = 0;
         end
-
         $display("== Run 2 complete ==");
 
 
@@ -188,7 +190,11 @@ module systolic_top_tb;
         repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
 
 
-        //third example
+
+
+        // ------------------------
+        // THIRD RUN (with negative integers too) & NO RESET
+        // ------------------------
         $display("\n== Starting Run 3 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
@@ -245,10 +251,11 @@ module systolic_top_tb;
             wait(final_data_out);
             @(posedge clk);
             if (i < 4) begin
+                $write("[ ");
                 for (int j = 0; j < 4; j++) begin
-                    $display(" Element at row # %0d and column # %0d = %0d",  
-                            i+1, j+1, dut.y_o[i][j]);
-                    end
+                    $write("%0d ", dut.y_o[i][j]);
+                end
+                $write("]\n");
                 end
             src_ready = 0;
         end
@@ -261,7 +268,13 @@ module systolic_top_tb;
         repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
 
 
-        //fourth example
+     
+
+
+
+        //-------------------------
+        // FOURTH RUN (with negative integers too) & NO RESET
+        //-------------------------
         $display("\n== Starting Run 4 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
@@ -318,10 +331,11 @@ module systolic_top_tb;
             wait(final_data_out);
             @(posedge clk);
             if (i < 4) begin
+                $write("[ ");
                 for (int j = 0; j < 4; j++) begin
-                    $display(" Element at row # %0d and column # %0d = %0d",  
-                            i+1, j+1, dut.y_o[i][j]);
-                    end
+                    $write("%0d ", dut.y_o[i][j]);
+                end
+                $write("]\n");
                 end
             src_ready = 0;
         end
@@ -334,8 +348,14 @@ module systolic_top_tb;
         repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
 
 
-        //fifth example
-         $display("\n== Starting Run 5 with negative integers ==");
+
+
+
+
+        //-------------------------
+        // FIFTH RUN (with negative integers too) & NO RESET
+        //-------------------------
+        $display("\n== Starting Run 5 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -391,13 +411,13 @@ module systolic_top_tb;
             wait(final_data_out);
             @(posedge clk);
             if (i < 4) begin
+                $write("[ ");
                 for (int j = 0; j < 4; j++) begin
-                    $display(" Element at row # %0d and column # %0d = %0d",  
-                            i+1, j+1, dut.y_o[i][j]);
-                    end
+                    $write("%0d ", dut.y_o[i][j]);
+                end
+                $write("]\n");
                 end
             src_ready = 0;
-                 
         end
 
         $display("== Run 5 complete ==");
@@ -407,8 +427,14 @@ module systolic_top_tb;
         repeat(10) @(posedge clk); // Wait for a few cycles before starting the next run
 
 
-        //sixth example
-         $display("\n== Starting Run 6 with negative integers ==");
+
+
+
+
+        //-------------------------
+        // SIXTH RUN (with negative integers too) & NO RESET
+        //-------------------------       
+        $display("\n== Starting Run 6 with negative integers ==");
         @(posedge clk);
         valid_in = 1;
         @(posedge clk);
@@ -464,18 +490,17 @@ module systolic_top_tb;
             wait(final_data_out);
             @(posedge clk);
             if (i < 4) begin
+                $write("[ ");
                 for (int j = 0; j < 4; j++) begin
-                    $display(" Element at row # %0d and column # %0d = %0d",  
-                            i+1, j+1, dut.y_o[i][j]);
-                    end
+                    $write("%0d ", dut.y_o[i][j]);
+                end
+                $write("]\n");
                 end
             src_ready = 0;
         end
 
         $display("== Run 6 complete ==");
-
-
-
+        final_data_out = 0;
 
       #25000000;
         $finish;

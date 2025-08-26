@@ -44,6 +44,17 @@ We made a 4 by 4 systolic array for efficient Matrix Multiplication.
 
 ## BenchMark:
 
+| Processor        | Time (ns) (avg from 6 runs) |
+|------------------|-----------------------------|
+| M1               | 1000                        |
+| i7-1185G7        | 1239                        |
+| i7-1355U         | 715                         |
+| i5-10310U        | 1784                        |
+| i5-6300U         | 2455                        |
+| i7-8665U         | 1792                        |
+| *Systolic @ 3GHz*| *~15 (from simulation)*     |
+
+Hence we observe that the systolic array is approximately **50-160** times faster than main-stream general purpose cpus. 
 
 
 # Documentation :
