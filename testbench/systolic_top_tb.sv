@@ -171,6 +171,12 @@ module systolic_top_tb;
             src_ready = 1;
             wait(final_data_out);
             @(posedge clk);
+            if (i < 4) begin
+                for (int j = 0; j < 4; j++) begin
+                    $display(" Element at row # %0d and column # %0d = %0d",  
+                            i+1, j+1, dut.y_o[i][j]);
+                    end
+                end
             src_ready = 0;
         end
 
@@ -238,8 +244,13 @@ module systolic_top_tb;
             src_ready = 1;
             wait(final_data_out);
             @(posedge clk);
+            if (i < 4) begin
+                for (int j = 0; j < 4; j++) begin
+                    $display(" Element at row # %0d and column # %0d = %0d",  
+                            i+1, j+1, dut.y_o[i][j]);
+                    end
+                end
             src_ready = 0;
-         
         end
 
         $display("== Run 3 complete ==");
@@ -306,6 +317,12 @@ module systolic_top_tb;
             src_ready = 1;
             wait(final_data_out);
             @(posedge clk);
+            if (i < 4) begin
+                for (int j = 0; j < 4; j++) begin
+                    $display(" Element at row # %0d and column # %0d = %0d",  
+                            i+1, j+1, dut.y_o[i][j]);
+                    end
+                end
             src_ready = 0;
         end
 
@@ -373,6 +390,12 @@ module systolic_top_tb;
             src_ready = 1;
             wait(final_data_out);
             @(posedge clk);
+            if (i < 4) begin
+                for (int j = 0; j < 4; j++) begin
+                    $display(" Element at row # %0d and column # %0d = %0d",  
+                            i+1, j+1, dut.y_o[i][j]);
+                    end
+                end
             src_ready = 0;
                  
         end
@@ -440,6 +463,12 @@ module systolic_top_tb;
             src_ready = 1;
             wait(final_data_out);
             @(posedge clk);
+            if (i < 4) begin
+                for (int j = 0; j < 4; j++) begin
+                    $display(" Element at row # %0d and column # %0d = %0d",  
+                            i+1, j+1, dut.y_o[i][j]);
+                    end
+                end
             src_ready = 0;
         end
 
