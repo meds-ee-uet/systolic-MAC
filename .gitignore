@@ -3,4 +3,4 @@ transcript
 build/
 hello
 benchmarks.o
-output.o
+*.o
