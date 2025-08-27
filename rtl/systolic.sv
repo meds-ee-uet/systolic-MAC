@@ -219,7 +219,8 @@ module systolic(
             end
 
             RECEIVE:begin    
-    
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 if(tx_one_done)begin
                     next_state=IN_COUNT;
                 end
@@ -232,6 +233,8 @@ module systolic(
             end
 
             IN_COUNT:begin
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 if (load_in_done)begin
                     for(int x=0;x<4;x++)begin
                         load_fr[x]=1'b1;
@@ -244,7 +247,8 @@ module systolic(
             end
 
             LOAD_IN:begin
-                
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 next_col=1'b1;
                 next_row=1'b1;
                 next_state=RECEIVE;
@@ -252,6 +256,8 @@ module systolic(
             end
 
             FEED:begin
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 if(valid_out_flag)
                     begin
                         next_state=DONE;
@@ -269,8 +275,8 @@ module systolic(
             end
 
             PROCESSING:begin
-                
-              
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 if (~(valid_out_flag)&&(done_flag))
                     begin
                         for(int x=0;x<4;x++)begin
@@ -288,10 +294,14 @@ module systolic(
             end
 
             DONE:begin
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 next_state=LOAD_OUT;
             end
 
             LOAD_OUT:begin
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 load_out=1'b1;
                 dest_valid=1'b1;
                 next_state=TRANSFER;
@@ -301,6 +311,7 @@ module systolic(
                 sh_count_done=sh_count_done?1:0;
                 if(tx_two_done)begin
                     if(final_transfer)begin
+                        final_transfer=1'b0;
                         next_state=IDLE;
                         done_matrix_mult=1'b1;
                         next_col=1'b1;
@@ -308,12 +319,16 @@ module systolic(
                         res_internal=1'b1;
                     end
                     else begin
+                        res_internal = 1'b0;
+                        final_transfer=1'b0;
                         shift=1'b1;
                         next_state=SHIFT_COUNT;
                     end
                 end
                 else 
                     begin
+                        res_internal = 1'b0;
+                        final_transfer=1'b0;
                         dest_valid=1'b1;
                         next_state=TRANSFER;
                     end
@@ -322,11 +337,22 @@ module systolic(
             end
 
             SHIFT_COUNT:begin
-                if(sh_count_done) final_transfer=1'b1;
-                dest_valid=1'b1;
-                next_state=TRANSFER;
+                if(sh_count_done)begin
+                    res_internal = 1'b0;
+                    final_transfer=1'b1;
+                    dest_valid=1'b1;
+                    next_state=TRANSFER;
+                end
+                else begin 
+                    res_internal = 1'b0;
+                    final_transfer=1'b0;
+                    dest_valid=1'b1;
+                    next_state=TRANSFER;
+                end
             end
             default: begin
+                res_internal = 1'b0;
+                final_transfer=1'b0;
                 next_state = IDLE;
             end
 
