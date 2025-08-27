@@ -704,7 +704,7 @@ We used a custom benchmark written in C language, which multiplied two randomly 
 |i5-10310U|1784|
 |i5-6300U|2455|
 |i7-8665U|1792|
-|Systolic @ 3GHz|~15 (from simulation)|
+<!-- |Systolic @ 3GHz|~15 (from simulation)| -->
 
 Hence we observe that the systolic array is approximately **50-160** times faster than main-stream general purpose cpus. 
 
