@@ -2,12 +2,8 @@
 
 
 
+This repository includes custom RTL and testbenches implementation in system verilog for a 4 by 4 matrix multiplication accelerator using Systolic Array Architecture built from scratch. 
 
-## Introduction:
-In parallel computer architectures, a **systolic array** is a homogeneous network of tightly coupled **data processing units (DPUs)** which is used for many purposes . It has a lot of Applications .
-
-## Purpose of Our Systolic Array:
-We made a 4 by 4 systolic array for efficient Matrix Multiplication. 
 
 ## Directory Structure:
 ```
@@ -42,6 +38,33 @@ We made a 4 by 4 systolic array for efficient Matrix Multiplication.
 
 ```
 
+## How to Run:
+
+### Steps 1:
+### Clone the repository:
+
+git clone [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git)
+
+---
+
+### Step 2:
+### Install All the Required Pre-requisites:
+
+1. Modelsim / Questasim
+2. GTK-Wave
+3. install `make`
+4. gcc --> for benchmark
+
+### Step 3:
+### Using Makefile :
+You can see the simulations in GTK-Wave using the Makefile. You have to write following command :
+```
+make TOP=module_name all
+```
+
+
+
+---
 ## BenchMark:
 
 | Processor        | Time (ns) (avg from 6 runs) |
