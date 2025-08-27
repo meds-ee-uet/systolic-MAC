@@ -695,24 +695,16 @@ We tested by six examples , two are shown below :
 ![transcript](./transcript.png)
 ## Benchmarks
 We used a custom benchmark written in C language, which multiplied two randomly generated 8 bit 4x4 matrices into 4x4 32 bit result. We ran it on different processors 6 times and took the average of the findings. The results are shown in the table below.  
-+-------------------+-----------------------------+
-| Processor         | Time (ns) (avg from 6 runs) |
-+===================+=============================+
-| M1                | 1000                        |
-+-------------------+-----------------------------+
-| i7-1185G7         | 1239                        |
-+-------------------+-----------------------------+
-| i7-1355U          | 715                         |
-+-------------------+-----------------------------+
-| i5-10310U         | 1784                        |
-+-------------------+-----------------------------+
-| i5-6300U          | 2455                        |
-+-------------------+-----------------------------+
-| i7-8665U          | 1792                        |
-+-------------------+-----------------------------+
-| *Systolic @ 3GHz* | *~15 (from simulation)*     |
-+-------------------+-----------------------------+
 
+| Processor   | Time (ns) (avg from 6 runs)  |
+|---|---|
+| M1  | 1000  |
+| i7-1185G7  | 1239   |
+| i7-1355U   | 715   |
+| i5-10310U   | 1784    |
+| i5-6300U   | 2455     |
+| i7-8665U  | 1792 |
+| *Systolic @ 3GHz* | *~15 (from simulation)*    |
 
 Hence we observe that the systolic array is approximately **50-160** times faster than main-stream general purpose cpus. 
 
