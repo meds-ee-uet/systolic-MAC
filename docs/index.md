@@ -16,13 +16,18 @@ The documentation is divided into two main sections:
 - This I/O is communicated using the **bidirectional ready-valid protocol**.  
 - The bits have a predefined format according to which they are received/transmitted.  
 
+**Matrix Transfer Format**
+[1st  2nd  3rd  4th ]
+[5th  6th  7th  8th ]
+[9th  10th 11th 12th]
+[13th 14th 15th 16th]
+
 **Input format:**  
-- [63:32] → preformatted row (8 bits per element)
-- [31:0] → preformatted column (8 bits per element)
+- [63:32] → row (8 bits per element)[4 elements]
+- [31:0] → column (8 bits per element)[4 elements]
 
 
 **Output format:**  
-
 [2 × (32-bit elements)]
 
 
@@ -50,7 +55,7 @@ The documentation is divided into two main sections:
 ## Getting Started
 Clone our repository:
 
-git clone [https://systolic-mac.readthedocs.io/en/latest/](https://systolic-mac.readthedocs.io/en/latest/)
+git clone [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git)
 
 ---
 
@@ -686,9 +691,11 @@ We tested by six examples , two are shown below :
 
 ---
 ## (8) RESULT
+## Transcript:
+![transcript](./transcript.png)
+## Benchmarks
 We used a custom benchmark written in C language, which multiplied two randomly generated 8 bit 4x4 matrices into 4x4 32 bit result. We ran it on different processors 6 times and took the average of the findings. The results are shown in the table below.  
 
-## Benchmarks
 | Processor        | Time (ns) (avg from 6 runs) |
 |------------------|-----------------------------|
 | M1               | 1000                        |
