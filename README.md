@@ -70,6 +70,8 @@ You can see the simulations in GTK-Wave using the Makefile. You have to write fo
 make TOP=module_name all
 ```
 
+***Or you can alternatively use **Modelsim** or Questasim as well !***
+
 
 
 ---

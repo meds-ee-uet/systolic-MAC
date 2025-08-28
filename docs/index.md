@@ -53,11 +53,38 @@ The documentation is divided into two main sections:
 ---
 
 ## Getting Started
+
+
+### Steps 1:
+### Clone the repository:
+
 Clone our repository [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git) by:
+
 
 ```
 git clone git@github.com:ee-uet/systolic-MAC.git
 ```
+
+
+---
+
+### Step 2:
+### Install All the Required Pre-requisites:
+
+1. Modelsim / Questasim
+2. GTK-Wave
+3. install `make`
+4. gcc --> for benchmark
+---
+### Step 3:
+### Using Makefile :
+You can see the simulations in GTK-Wave using the Makefile. You have to write following command :
+```
+make TOP=module_name all
+```
+***Or you can alternatively use **Modelsim** or Questasim as well !***
+
+---
 
 # Developer’s Guide
 
