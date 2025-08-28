@@ -15,7 +15,7 @@ RTL_DIR      := rtl
 TB_DIR       := testbench
 
 # TOP: override when calling make
-TOP          ?= data_feeder
+TOP          := $(top)
 TOP_TB       := $(TOP)_tb
 VCD_FILE     := $(TOP).vcd          # expects $dumpfile in TB matches this
 SIM_TIME_CMD := run -all

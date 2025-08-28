@@ -35,6 +35,9 @@ This repository includes custom RTL and testbenches implementation in system ver
 │   ├── systolic_tb.sv
 │   └── systolic_top_tb.sv
 ├── LICENSE
+├── .readthedocs.yaml
+├── .gitignore
+
 
 ```
 
@@ -43,7 +46,12 @@ This repository includes custom RTL and testbenches implementation in system ver
 ### Steps 1:
 ### Clone the repository:
 
-git clone [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git)
+Type the below command:
+
+```
+git clone git@github.com:ee-uet/systolic-MAC.git
+```
+
 
 ---
 

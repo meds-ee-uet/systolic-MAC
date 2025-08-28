@@ -53,11 +53,11 @@ The documentation is divided into two main sections:
 ---
 
 ## Getting Started
-Clone our repository:
+Clone our repository [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git) by:
 
-git clone [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git)
-
----
+```
+git clone git@github.com:ee-uet/systolic-MAC.git
+```
 
 # Developer’s Guide
 
@@ -186,6 +186,11 @@ y += (a * b);
   - This result is padded to **32 bits** → giving output `y` as **32 bits**.  
 - As soon as the result `y` is obtained, the **done** signal goes high.  
 
+### Simulations:
+
+![sim](mac_unit_sim.png)
+
+
 
 ### 3. Register Design
 
@@ -285,6 +290,9 @@ y += (a * b);
 - To enable this **parallel pipelined computation**, each PE forwards `A_out` and `B_out` to its neighbors.  
 - This design ensures faster computations by reducing the number of cycles required.  
 
+## Simulations:
+
+![simulation_pe](pe_sim.png)
 
 ---
 
@@ -349,6 +357,12 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 - This process produces **seven 8-bit chunks**, which are then fed to the **Processing Elements** as individual elements of a row/column.  
 - These seven 8-bit chunks form the **out_width**, which corresponds to `data_out`.  
 
+
+### Simulations:
+
+![feeder_simulation](feeder_sim.png)
+
+
 ---
 
 
@@ -358,6 +372,7 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 
 - This is how our **Systolic Array Top** looks after connecting all the **Processing Elements** and **Data Feeders**.  
 - To use this array, a **proper interface** is required, which is explained in the following sections.  
+
 
 ---
 
@@ -424,6 +439,10 @@ A simple solution is to use **data feeders**, in which we feed **56-bit row/colu
 - In this state, `valid` and `ready` being high indicate that **handshaking has occurred**.  
 - The `en_data_Tx` signal is asserted (goes high), initiating the **data transfer**.  
 - Immediately after this, the system **returns to the IDLE** state.  
+
+### Simulations:
+
+![protocol_sim](rv_protocol_sim.png)
 
 
 ---
