@@ -1,5 +1,9 @@
 #  4x4 INT Systolic Architecture Based Accelerator for Efficient Matrix Multiplication
 
+<p align="center">
+  <img src="docs/logo.png" alt="Systolic logo" width="200"/>
+</p>
+
 
 
 This repository includes custom RTL and testbenches implementation in system verilog for a 4 by 4 matrix multiplication accelerator using Systolic Array Architecture built from scratch. 
