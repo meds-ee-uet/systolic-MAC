@@ -1,12 +1,12 @@
-#  4x4 INT Systolic Architecture Based Accelerator for Efficient Matrix Multiplication
+# HEARTBEAT
 
 <p align="center">
   <img src="docs/logo.png" alt="Systolic logo" width="200"/>
 </p>
 
+#### A 4x4 INT Systolic Architecture Based Accelerator for Efficient Matrix Multiplication
 
-
-This repository includes custom RTL and testbenches implementation in system verilog for a 4 by 4 matrix multiplication accelerator using Systolic Array Architecture built from scratch. 
+This repository includes custom RTL and testbenches implementation in systemverilog for **HEARTBEAT**; an integer based 4 by 4 matrix multiplication accelerator using Systolic Array Architecture built from scratch. 
 
 
 ## Directory Structure:
@@ -53,7 +53,7 @@ This repository includes custom RTL and testbenches implementation in system ver
 Type the below command:
 
 ```
-git clone git@github.com:ee-uet/systolic-MAC.git
+git clone git@github.com:meds-ee-uet/systolic-MAC.git
 ```
 
 
