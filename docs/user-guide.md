@@ -48,11 +48,11 @@
 ### Steps 1:
 ### Clone the repository:
 
-Clone our repository [https://github.com/ee-uet/systolic-MAC.git](https://github.com/ee-uet/systolic-MAC.git) by:
+Clone our repository [https://github.com/meds-ee-uet/systolic-MAC.git](https://github.com/meds-ee-uet/systolic-MAC.git) by:
 
 
 ```
-git clone git@github.com:ee-uet/systolic-MAC.git
+git clone git@github.com:meds-ee-uet/systolic-MAC.git
 ```
 
 

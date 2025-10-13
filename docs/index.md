@@ -16,19 +16,6 @@ Everything you need to *use* the chip — setup, input/output formats, ready-val
 For engineers and students who want to understand or modify the design. Includes design principles, internal modules, and detailed architecture.  
 [Go to Developer Guide](developer-guide.md)
 
----
-
-##  Modules
-Detailed documentation for each hardware block:
-
-- [MAC Unit](mac-unit.md)
-- [Processing Element (PE)](processing-element.md)
-- [Data Feeders](data-feeders.md)
-- [Interface](interface.md)
-- [Systolic Top](systolic-top.md)
-- [Input Datapath](input-datapath.md)
-- [Output Datapath](output-datapath.md)
-- [Counter](counter.md)
 
 ---
 ## TESTING
