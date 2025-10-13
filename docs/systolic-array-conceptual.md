@@ -1,4 +1,4 @@
-## 3. Systolic Array
+##  Systolic Array
 
 - A **systolic array** is a grid of interconnected **Processing Elements (PEs)** arranged in rows and columns.  
 - Data pulses rhythmically through the array like **blood through the heart** (hence the name *“systolic”*).  

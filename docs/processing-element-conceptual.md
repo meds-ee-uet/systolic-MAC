@@ -1,5 +1,5 @@
 
-## 2. Processing Elements / Data Processing Units
+##  Processing Elements / Data Processing Units
 
 - A **Processing Element (PE)**, also called a **Data Processing Unit (DPU)**, is the fundamental building block of a systolic array.  
 - Each PE is designed to perform simple operations such as:  

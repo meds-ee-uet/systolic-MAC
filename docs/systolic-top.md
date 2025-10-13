@@ -1,5 +1,5 @@
 
-## (4) Systolic Top
+##  Systolic Top
 
 ![Systolic Top picture](systolic_top_1.png)  <!-- Replace with your actual image -->
 

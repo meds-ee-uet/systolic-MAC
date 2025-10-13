@@ -1,5 +1,5 @@
 
-## (3) Data Feeders  
+##  Data Feeders  
 
 **1. Why we used them?**  
 We have already described the processing element. Now, since we are using a **4×4 systolic array**, a total of **16 processing elements** will be used.  

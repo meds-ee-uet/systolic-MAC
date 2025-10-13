@@ -1,7 +1,7 @@
 
-## (2) PROCESSING ELEMENT (PE)
+##  PROCESSING ELEMENT (PE)
 
-### PinOut:
+### 1.PinOut:
 ![pe_PO](PE_PO.png)
 
 **Inputs:**

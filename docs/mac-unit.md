@@ -1,4 +1,4 @@
-## (1) MAC Unit
+##  MAC Unit
 
 ### 1. PinOut
 ![MAC Unit PinOut](MAC-PO(1).png)  <!-- Replace mac_pinout.png with your actual file -->

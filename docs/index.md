@@ -18,7 +18,7 @@ For engineers and students who want to understand or modify the design. Includes
 
 ---
 
-## 🔩 Modules
+##  Modules
 Detailed documentation for each hardware block:
 
 - [MAC Unit](mac-unit.md)
@@ -31,30 +31,21 @@ Detailed documentation for each hardware block:
 - [Counter](counter.md)
 
 ---
-TESTING
+## TESTING
 
-We tested by six examples , two are shown below :
 
-### Simulation:
-
-![systolic_top](./systolic_simulation.png)
+[testing & simulation](testing.md)
 
 ---
 
-## (8) RESULT
-## Transcript:
-![transcript](./transcript.png)
-## Benchmarks
-We used a custom benchmark written in C language, which multiplied two randomly generated 8 bit 4x4 matrices into 4x4 32 bit result. We ran it on different processors 6 times and took the average of the findings. The results are shown in the table below.  
+## RESULTS
 
-![table](benchmark.png)
-
-Hence we observe that the systolic array is approximately **50-160** times faster than main-stream general purpose cpus. 
+[results benchmark](results.md)
 
 ---
 
-## 📄 Repository
+##  Repository
 The full source code and Makefiles are available here:  
-➡️ [GitHub Repository](https://github.com/meds-ee-uet/systolic-MAC.git)
+ [GitHub Repository](https://github.com/meds-ee-uet/systolic-MAC.git)
 
 ---

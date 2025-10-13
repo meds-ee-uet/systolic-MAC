@@ -1,4 +1,4 @@
-## (5) Interface 
+##  Interface 
 
 #### 1. Interface Design Diagram
 ![Interface Draft](interface_draft.png)  <!-- Replace with your actual image -->

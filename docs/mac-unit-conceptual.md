@@ -1,5 +1,5 @@
 
-## 1. MAC Unit
+##  MAC Unit
 - In computing, especially digital signal processing, the **Multiply–Accumulate (MAC)** or **Multiply–Add (MAD)** operation is a common step that:  
   - Computes the product of two numbers.  
   - Adds that product to an accumulator.  

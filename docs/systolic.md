@@ -1,5 +1,5 @@
 
-## (6) Systolic Array
+##  Systolic Array
 ![Systolic Array Design](systolic_copy(2).png)  <!-- Replace with your actual image -->
 
 ### Main Parts of the Systolic Array
