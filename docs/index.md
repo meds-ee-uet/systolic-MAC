@@ -21,13 +21,13 @@ For engineers and students who want to understand or modify the design. Includes
 ## TESTING
 
 
-[testing & simulation](testing.md)
+[Testing & Simulation](testing.md)
 
 ---
 
 ## RESULTS
 
-[results benchmark](results.md)
+[Results & Benchmark](results.md)
 
 ---
 

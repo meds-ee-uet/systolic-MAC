@@ -4,13 +4,4 @@ nav:
   - Home: index.md
   - User Guide: user-guide.md
   - Developer Guide: developer-guide.md
-  - Design Overview: design-overview.md
-  - Modules:
-      - MAC Unit: mac-unit.md
-      - Processing Element: processing-element.md
-      - Data Feeders: data-feeders.md
-      - Interface: interface.md
-      - Systolic Top: systolic-top.md
-      - Input Datapath: input-datapath.md
-      - Output Datapath: output-datapath.md
-      - Counter: counter.md
+
